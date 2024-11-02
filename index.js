@@ -1,5 +1,6 @@
 const express = require("express");
 const fs = require("fs");
+const path = require("path");
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -13,18 +14,18 @@ app.use((req, res, next) => {
 
 
 // Middleware for asset requests
-app.use(express.static(__dirname + "\\public"));
+app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res) => {
-  res.sendFile(__dirname + "\\client\\home\\index.html");
+  res.sendFile(path.join(__dirname, "client", "home", "index.html"));
 });
 
 app.get("/favicon.ico", (req, res) => {
-  res.sendFile(__dirname + "\\assets\\images\\favicon.ico");
+  res.sendFile(path.join(__dirname, "assets", "images", "favicon.ico"));
 });
 
 app.get("/chat", (req, res) => {
-  res.sendFile(__dirname + "\\client\\chat\\index.html");
+  res.sendFile(path.join(__dirname, "client", "chat", "index.html"));
 });
 
 app.get("/chat/load", (req, res) => {
