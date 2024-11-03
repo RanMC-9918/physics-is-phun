@@ -5,10 +5,15 @@ const path = require("path");
 const app = express();
 const port = process.env.PORT || 8080;
 
+const debugMode = false;
+
 // Middleware for parsing JSON request bodies
 
 app.use((req, res, next) => {
-  console.log(`${req.method} request to ${req.url}`);
+  // Change debugMode to true to see requests
+  if (debugMode){
+    console.log(`${req.method} request to ${req.url}`);
+  }
   next();
 });
 
@@ -21,11 +26,11 @@ app.get("/", (req, res) => {
 });
 
 app.get("/favicon.ico", (req, res) => {
-  res.sendFile(path.join(__dirname, "assets", "images", "favicon.ico"));
+  res.sendFile(path.join(__dirname, "public", "images", "favicon.ico"));
 });
 
 app.get("/chat", (req, res) => {
-  res.sendFile(path.join(__dirname, "client", "chat", "index.html"));
+  res.sendFile(path.join(__dirname, "public", "chat", "index.html"));
 });
 
 app.get("/chat/load", (req, res) => {
@@ -33,4 +38,4 @@ app.get("/chat/load", (req, res) => {
 });
 
 app.listen(port);
-console.log("SERVER STARTED");
+console.log("SERVER STARTED at port: " + port);
