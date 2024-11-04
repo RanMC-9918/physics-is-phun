@@ -4,25 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Physics - Chat</title>
+    <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
     <link rel="stylesheet" href="../css/navbar.css" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="../css/global.css" />
   </head>
   <body>
     <nav class="navbar">
         <div class="logo">
             <a href="../">
-                    <img src="../images/logo.jpg" alt="Logo of Physics Phun" />
+                    <img id="logo-icon" src="../images/icon.png" alt="Logo of Physics Phun" />
+                    <img id="logo-text" src="../images/noicon.png" alt="Logo of Physics Phun" />
             </a>
         </div>
         
         <ul>
-            <a href="../about">
-                <li class="nav-items">About</li>
+            <a href="../login">
+                <li class="nav-items">Login</li>
             </a>
-
-            <a href="../contact">
-                <li class="nav-items">Contact</li>
+            <a href="../signin">
+              <li class="nav-items">Signin</li>
             </a>
-
             <a href="../chat">
                 <li class="nav-items">Chat</li>
             </a>
@@ -32,10 +34,17 @@
             </a>
         </ul>
     </nav>
-
     <h1>Physics Help Room</h1>
-    <ul id="chat-container">
-      <script type="text/javascript" src="loadMessages.js"></script>
-    </ul>
+    <div id="mainBody">
+      <div id="chat-container">
+        <script type="text/javascript" src="loadMessages.js"></script>
+      </div>
+    </div>
+    <a href="../add-message">
+      <button class="post">
+        <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="45" d="M256 112v288M400 256H112"/></svg>
+        Add
+      </button>
+    </a>
   </body>
 </html>

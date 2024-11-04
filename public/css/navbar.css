@@ -5,12 +5,12 @@
   --primary: blanchedalmond;
   --secondary: goldenrod;
   --tertiary: darkgoldenrod;
-  --interaction: brown;
 }
 
 a {
-  color: black;
+  color: blanchedalmond; 
   text-decoration: none;
+  font-weight: 500;
 }
 
 body {
@@ -26,6 +26,8 @@ body {
   padding: 5px 20px;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 10px;
+  border-radius: 0px 0px 10px 10px;
 }
 
 /* LEFT SIDE OF NAVBAR */
@@ -41,7 +43,10 @@ body {
   list-style-type: none;
   list-style: none;
   padding: 15px 25px;
-  margin: 0 10px;
+}
+
+.navbar a{
+  margin: 0px 10px;
 }
 
 /* RIGHT SIDE OF NAVBAR */
@@ -55,17 +60,28 @@ body {
   height: 50px;
 }
 
+.navbar a:has(img){
+  background-color: transparent;
+}
+
 /* BUTTONS NAVBAR */
 
-.navbar li,
-.navbar img {
-    transition: border-radius 0.2s;
+
+.navbar a {
+    transition: scale 0.2s;
     border-radius: 5px;
   background-color: var(--tertiary);
 }
 
-.navbar li:hover,
-.navbar img:hover {
-    border-radius: 15px;
-  background-color: var(--interaction);
+.navbar a:not(:has(img)):hover {
+  scale: 1.1;
+}
+
+.navbar #logo-icon{
+  transition: translate 0.3s;
+  margin-right: -5px;
+}
+
+.navbar a:hover #logo-icon{
+  translate: 0px 10px;
 }

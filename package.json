@@ -1,19 +1,20 @@
 {
-  "name": "physics-is-phun",
-  "version": "1.0.0",
-  "description": "website for physics stack exchange",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm install",
-    "start": "node index.js"
-  },
-  "author": "Rohan and Sarvesh",
-  "license": "ISC",
-  "dependencies": {
-    "express": "^4.21.1",
-    "fs": "^0.0.1-security",
-    "http": "^0.0.1-security",
-    "pg": "^8.13.1"
-  }
+    "name": "physics-is-phun",
+    "version": "1.0.0",
+    "description": "website for physics stack exchange",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "npm install",
+        "start": "node index.js"
+    },
+    "author": "Rohan and Sarvesh",
+    "license": "ISC",
+    "dependencies": {
+        "body-parser": "^1.20.3",
+        "express": "^4.21.1",
+        "fs": "^0.0.1-security",
+        "http": "^0.0.1-security",
+        "pg": "^8.13.1"
+    }
 }

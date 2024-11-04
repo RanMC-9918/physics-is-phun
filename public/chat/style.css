@@ -1,0 +1,110 @@
+#mainBody {
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+}
+#chat-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+h1{
+    display: block;
+    text-align: center;
+    word-wrap: none;
+}
+
+
+.card {
+    margin: 10px;
+    padding: 20px;
+    border: 3px outset #ca676752;
+    border-radius: 10px;
+    background-color: rgb(240, 214, 180);
+    text-align: left;
+}
+
+.card .header {
+    display: flex;
+    align-items: center;
+}
+
+.card .header h1 {
+    font-weight: bold;
+    font-size: 2em;
+}
+
+.card .header .line {
+    flex: 1;
+    height: 3px;
+    min-width: 15px;
+    margin: 0 20px;
+    background-color: #c09979;
+    border-radius: 10px;
+}
+
+.card .body{
+    font-size: 1.2em;
+    color: #443;
+    margin-bottom: 30px;
+}
+
+.card .date {
+    font-size: 0.8em;
+    color: #444;
+}
+
+.card .author {
+    font-size: 1.1em;
+    color: #777;
+}
+
+.card .footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+
+.card .replies button{
+    background-color: #8f96d3;
+    border-radius: 10px;
+    padding: 10px;
+    border: none;
+    color: white;
+    font-weight: medium;
+    transition: scale 0.2s;
+}
+
+button:hover{
+    background-color: #8881be;
+    cursor: pointer;
+    scale: 1.1;
+}
+
+.post{
+    position: absolute;
+    top: calc(100vh - 65px);
+    left: calc(100vw - 120px);
+    width: 105px;
+    height: 50px;
+    border-radius: 10px;
+    background-color: #8f96d3;
+    color: white;
+    font-weight: 500;
+    font-size: 1.3em;
+    border: solid #8881be 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.post:hover{
+    background-color: #9089cd;
+    cursor: pointer;
+    scale: 1;
+}
+
+.post svg{
+    height: 35px;
+}

@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phun Physics</title>
+    <title>About Phun Physics</title>
     <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
     <link rel="stylesheet" href="../css/navbar.css" />
     <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
     <nav class="navbar">
@@ -33,8 +34,16 @@
             </a>
         </ul>
     </nav>
-    <div class="mainBody">
-        
+    <div id="mainBody">
+        <form action="/add-message-form" method="POST">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required>
+            <br/>
+            <label for="question">Question:</label>
+            <input type="text" id="question" name="question" required>
+            <br>
+            <button type="submit">Ask question</button>
+        </form>
     </div>
 </body>
 </html>
