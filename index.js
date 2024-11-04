@@ -178,7 +178,7 @@ app.post('/add-message-form', (req, res) => {
     if (err) {
       console.error("Error fetching unread messages from PostgreSQL database", err);
     } else {
-      console.log = result.rows;
+      console.log(result.rows);
     }
   }
 )
