@@ -1,6 +1,6 @@
 let chatContainer = document.getElementById("chat-container");
 
-fetch(window.location.href + "load").then((res) => {
+fetch(window.location.href.substring(0, window.location.href.indexOf('/')) + '/chat/load).then((res) => {
   res.json().then((data) => {
     console.log(data);
     data.forEach((e) => {
