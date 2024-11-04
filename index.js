@@ -1,6 +1,23 @@
 const express = require("express");
 const fs = require("fs");
 const path = require("path");
+const { Pool } = require("pg");
+
+// Connect to the PostgreSQL database
+
+const client = new Pool({
+  user: "postgres",
+  host: "localhost",
+  database: "local-test",
+  password: "test",
+  port: 5432
+});
+
+client.connect();
+
+client.query("SELECT * FROM apphysics1", (err, res) => {
+  console.log(res);
+});
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -11,7 +28,6 @@ app.use((req, res, next) => {
   console.log(`${req.method} request to ${req.url}`);
   next();
 });
-
 
 // Middleware for asset requests
 app.use(express.static(path.join(__dirname, "public")));
