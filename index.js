@@ -172,6 +172,17 @@ app.post('/add-message-form', (req, res) => {
       }
     })
 
+  client.query(
+  "SELECT * FROM apphysics1",
+  (err, result) => {
+    if (err) {
+      console.error("Error fetching unread messages from PostgreSQL database", err);
+    } else {
+      console.log = result.rows;
+    }
+  }
+)
+
   if (title.length > 50){
     res.sendFile(path.join(__dirname, "public", "add-message", "index_error.html"));
   }else{
