@@ -162,7 +162,7 @@ app.post('/add-message-form', (req, res) => {
   const currentDate = new Date();
   const formattedDate = currentDate.toISOString().split('T')[0]
 
-  client.query(`INSERT INTO apphysics1 (body, title, likes, posted_at) VALUES ('${username}', '${password}', 0, ${formattedDate}, );`, (err, res) => {
+  client.query(`INSERT INTO apphysics1 (body, title, likes, posted_at) VALUES ('${question}', '${title}', 0, '${formattedDate}' );`, (err, res) => {
       if (err) {
         console.error("Error inserting new user into PostgreSQL database", err);
       } else {
