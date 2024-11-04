@@ -71,6 +71,8 @@ app.get("/favicon.ico", (req, res) => {
 });
 
 app.get("/chat/load", (req, res) => {
+  
+  unreadMessages = client.query("SELECT * FROM apphysics1");
   res.send(unreadMessages);
 });
 
@@ -181,7 +183,7 @@ app.listen(port);
 console.log("Server started on port: " + port);
 
 setInterval(() => {
-  unreadMessages = client.query("SELECT * FROM apphysics1 ORDER BY likes DESC LIMIT 7");
+  //unreadMessages = client.query("SELECT * FROM apphysics1 ORDER BY likes DESC LIMIT 7");
 }, 5000);
 
 
