@@ -56,6 +56,7 @@ app.use((req, res, next) => {
   if(debugMode) {
     console.log(`${req.method} request to ${req.url}`);
   }
+
   next();
 });
 
@@ -96,6 +97,22 @@ app.get("/chat/load", async (req, res) => {
       res.send(unreadMessages);
     }
   });
+});
+app.get("/reply", async (req, res) => {
+  const queryParam = req.query.id;
+  //console.log(queryParam)
+  let cardData = await getReplys(queryParam);
+  //console.log(cardData)
+  let body = cardData.reply.substring(2,cardData.reply.indexOf(',')-1)
+  cardData.reply = cardData.reply.substring(cardData.reply.indexOf(',')+1)
+  let date = cardData.reply.substring(0,cardData.reply.indexOf(','))
+  cardData.reply = cardData.reply.substring(cardData.reply.indexOf(',')+1)
+  let author = cardData.reply.substring(0,cardData.reply.indexOf(','))
+  cardData.reply = cardData.reply.substring(cardData.reply.indexOf(',')+1)
+  let likes = cardData.reply.substring(0,cardData.reply.indexOf(')'))
+  unreadMessages = [{body: `${body}`,date: `${date}`,author: `${await getNameFromId(author)}`,likes: `${likes}`}];
+  //console.log(unreadMessages)
+  res.send(unreadMessages);
 });
 
 app.get('/name/load/:id', (req, res) => {
@@ -191,14 +208,31 @@ app.post('/add-message-form', (req, res) => {
 
   const currentDate = new Date();
   const formattedDate = currentDate.toISOString().split('T')[0]
-
-  client.query(`INSERT INTO apphysics1 (body, title, likes, posted_at, author) VALUES ('${question}', '${title}', 0, '${formattedDate}', '${author}' );`, (err, res) => {
-      if (err) {
-        console.error("Error inserting new message into PostgreSQL database", err);
-      } else {
-        console.log("New message posted");
-      }
-    })
+  let id = generate10DigitRandomNumber();
+  while (checkDuplicateId1(id)){
+    id = generate10DigitRandomNumber();
+  }
+  client.query(`
+    INSERT INTO apphysics1 (resolved, title, body, posted_at, reply, author, id) 
+    VALUES ($1, $2, $3, $4, ROW($5, $6, $7, $8), $9, $10)
+  `, [
+    false, 
+    title, 
+    question, 
+    formattedDate, 
+    `This is a reply for id: ${id}`, 
+    formattedDate, 
+    author, 
+    0, 
+    author, 
+    id
+  ], (err, res) => {
+    if (err) {
+      console.error("Error inserting new message into PostgreSQL database", err);
+    } else {
+      console.log("New message posted with id: " + `${id}`);
+    }
+  });
 
   client.query(
   "SELECT * FROM apphysics1",
@@ -252,6 +286,15 @@ async function getNameFromId(id){
     });
   });
 }
+async function getReplys(id) {
+  try {
+    const res = await client.query('SELECT reply FROM apphysics1 WHERE id = $1;', [id]);
+    return res.rows[0];
+  } catch (err) {
+    console.error('Error fetching replies:', err);
+    throw err; // Or handle the error as needed
+  }
+}
 
 function validateEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -267,6 +310,19 @@ function generate10DigitRandomNumber() {
 
 function checkDuplicateId(id) {
   client.query(`SELECT * FROM accounts WHERE id = ${id}`, (err, result) => {
+        if (err) {
+          console.error("Error fetching user from PostgreSQL database", err);
+        } else {
+          if(result.rows.length > 0){
+            return true;
+          }
+          return false;
+        }
+      })
+}
+
+function checkDuplicateId1(id) {
+  client.query(`SELECT * FROM apphysics1 WHERE id = ${id}`, (err, result) => {
         if (err) {
           console.error("Error fetching user from PostgreSQL database", err);
         } else {
