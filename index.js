@@ -123,30 +123,6 @@ app.get('/replies/:id/load', async (req, res) => {
 
 //EXPRESS JS POST REQUESTS ------------------------------------------------------------------------
 
-async function loginVerification(username,password){
-  return new Promise((resolve, reject) => {
-    client.query('SELECT id FROM accounts WHERE pass = $1 AND username = $2;', [password, username], (err, res) => {
-      if (err) {
-        reject(err);
-      } else if (res.rows.length > 0) {
-        resolve(res.rows[0].id);
-      } else {
-        resolve(false); // Login failed
-      }
-    });
-  });
-}
-async function getNameFromId(id){
-  return new Promise((resolve, reject) => {
-    client.query('SELECT username FROM accounts WHERE id = $1;', [id], (err, res) => {
-      if (err) {
-        reject(err);
-      }else{
-        resolve(res.rows[0].username);
-      }
-    });
-  });
-}
 
 app.post('/login-form', async (req, res) => {
   const username = req.body.username;
@@ -172,17 +148,6 @@ app.post('/signin-form', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   
-  function validateEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  }
-
-  function generate10DigitRandomNumber() {
-    const min = -2000000000; // 10-digit minimum number
-    const max = 2000000000; // 10-digit maximum number
-  
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
 
   console.log(`Username: ${username}, Email: ${email}, Password: ${password}`)
 
@@ -214,18 +179,6 @@ app.post('/signin-form', (req, res) => {
 })
 
 
-function checkDuplicateId(id) {
-  client.query(`SELECT * FROM accounts WHERE id = ${id}`, (err, result) => {
-        if (err) {
-          console.error("Error fetching user from PostgreSQL database", err);
-        } else {
-          if(result.rows.length > 0){
-            return true;
-          }
-          return false;
-        }
-      })
-}
 
 
 app.post('/add-message-form', (req, res) => {
@@ -273,4 +226,54 @@ setInterval(() => {
   //unreadMessages = client.query("SELECT * FROM apphysics1 ORDER BY likes DESC LIMIT 7");
 }, 5000);
 
+//methords
 
+async function loginVerification(username,password){
+  return new Promise((resolve, reject) => {
+    client.query('SELECT id FROM accounts WHERE pass = $1 AND username = $2;', [password, username], (err, res) => {
+      if (err) {
+        reject(err);
+      } else if (res.rows.length > 0) {
+        resolve(res.rows[0].id);
+      } else {
+        resolve(false); // Login failed
+      }
+    });
+  });
+}
+async function getNameFromId(id){
+  return new Promise((resolve, reject) => {
+    client.query('SELECT username FROM accounts WHERE id = $1;', [id], (err, res) => {
+      if (err) {
+        reject(err);
+      }else{
+        resolve(res.rows[0].username);
+      }
+    });
+  });
+}
+
+function validateEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}
+
+function generate10DigitRandomNumber() {
+  const min = -2000000000; // 10-digit minimum number
+  const max = 2000000000; // 10-digit maximum number
+
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function checkDuplicateId(id) {
+  client.query(`SELECT * FROM accounts WHERE id = ${id}`, (err, result) => {
+        if (err) {
+          console.error("Error fetching user from PostgreSQL database", err);
+        } else {
+          if(result.rows.length > 0){
+            return true;
+          }
+          return false;
+        }
+      })
+}
