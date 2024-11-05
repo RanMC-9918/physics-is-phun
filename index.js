@@ -71,7 +71,6 @@ app.get("/favicon.ico", (req, res) => {
 });
 
 app.get("/chat/load", (req, res) => {
-  
   unreadMessages = client.query("SELECT * FROM apphysics1");
   res.send(unreadMessages);
 });
@@ -86,7 +85,7 @@ app.post('/login-form', (req, res) => {
   if (true){
     res.sendFile(path.join(__dirname, "public", "login", "index_error.html"));
   }else{
-    res.sendFile(path.join(__dirname, "public", "home", "index.html"));
+    res.redirect('/');
   }
   
 })
@@ -136,7 +135,7 @@ app.post('/signin-form', (req, res) => {
       }
     })
 
-    res.sendFile(path.join(__dirname, "public", "home", "index.html"));
+    res.redirect('/');
   }
 })
 
@@ -168,7 +167,7 @@ app.post('/add-message-form', (req, res) => {
       if (err) {
         console.error("Error inserting new user into PostgreSQL database", err);
       } else {
-        console.log("New user inserted into PostgreSQL database");
+        console.log("New question inserted into PostgreSQL database");
       }
     })
 
@@ -186,7 +185,7 @@ app.post('/add-message-form', (req, res) => {
   if (title.length > 50){
     res.sendFile(path.join(__dirname, "public", "add-message", "index_error.html"));
   }else{
-    res.sendFile(path.join(__dirname, "public", "home", "index.html"));
+    res.redirect('/chat');
   }
 })
 
