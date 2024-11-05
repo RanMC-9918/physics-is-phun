@@ -72,7 +72,7 @@ app.get("/favicon.ico", (req, res) => {
 
 app.get("/chat/load", (req, res) => {
   
-  unreadMessages = client.query("SELECT * FROM apphysics1", (err, req) => {
+  client.query("SELECT * FROM apphysics1", (err, req) => {
     if (err) {
       console.error("Error fetching unread messages from PostgreSQL database", err);
     } else {
@@ -92,7 +92,7 @@ app.post('/login-form', (req, res) => {
   if (username.length > 50){
     res.sendFile(path.join(__dirname, "public", "login", "index_error.html"));
   }else{
-    res.sendFile(path.join(__dirname, "public", "home", "index.html"));
+    res.redirect('/');
   }
   
 })
@@ -142,7 +142,7 @@ app.post('/signin-form', (req, res) => {
       }
     })
 
-    res.sendFile(path.join(__dirname, "public", "home", "index.html"));
+    res.redirect('/');
   }
 })
 
@@ -192,7 +192,7 @@ app.post('/add-message-form', (req, res) => {
   if (title.length > 50){
     res.sendFile(path.join(__dirname, "public", "add-message", "index_error.html"));
   }else{
-    res.sendFile(path.join(__dirname, "public", "home", "index.html"));
+    res.redirect('/chat');
   }
 })
 
