@@ -1,11 +1,14 @@
 let chatContainer = document.getElementById("chat-container");
 
-fetch(window.location.href.substring(0, window.location.href.indexOf('/')) + '/chat/load).then((res) => {
+// console.log(
+//    window.location
+// );
+
+fetch(window.location.origin + "/chat/load").then((res) => {
   res.json().then((data) => {
-    console.log(data);
+    //console.log(data);
     data.forEach((e) => {
-      let newChat = document.createElement("div");
-      newChat.innerHTML = `
+      chatContainer.innerHTML += `
       <div class="card">
         <div class="header">
           <h2>${e.title}</h2>
@@ -24,7 +27,6 @@ fetch(window.location.href.substring(0, window.location.href.indexOf('/')) + '/c
           </a>
         </div>
       </div>`;
-      chatContainer.appendChild(newChat);
     });
   });
 });

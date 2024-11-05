@@ -72,8 +72,14 @@ app.get("/favicon.ico", (req, res) => {
 
 app.get("/chat/load", (req, res) => {
   
-  unreadMessages = client.query("SELECT * FROM apphysics1");
-  res.send(unreadMessages);
+  unreadMessages = client.query("SELECT * FROM apphysics1", (err, req) => {
+    if (err) {
+      console.error("Error fetching unread messages from PostgreSQL database", err);
+    } else {
+      unreadMessages = req.rows;
+      res.send(unreadMessages);
+    }
+  });
 });
 
 //EXPRESS JS POST REQUESTS ------------------------------------------------------------------------
@@ -83,7 +89,7 @@ app.post('/login-form', (req, res) => {
   const password = req.body.password;
 
   console.log(`Username: ${username}, Password: ${password}`)
-  if (true){
+  if (username.length > 50){
     res.sendFile(path.join(__dirname, "public", "login", "index_error.html"));
   }else{
     res.sendFile(path.join(__dirname, "public", "home", "index.html"));
@@ -113,7 +119,7 @@ app.post('/signin-form', (req, res) => {
 
   console.log(`Username: ${username}, Email: ${email}, Password: ${password}`)
 
-  console.log(validateEmail(email));
+  //console.log(validateEmail(email));
 
   if (password.length <= 8 || !validateEmail(email)){
     //send to error page
@@ -159,16 +165,16 @@ app.post('/add-message-form', (req, res) => {
   const title = req.body.title;
   const question = req.body.question;
 
-  console.log(`Title: ${title}, Question: ${question}`)
+  //console.log(`Title: ${title}, Question: ${question}`)
 
   const currentDate = new Date();
   const formattedDate = currentDate.toISOString().split('T')[0]
 
   client.query(`INSERT INTO apphysics1 (body, title, likes, posted_at) VALUES ('${question}', '${title}', 0, '${formattedDate}' );`, (err, res) => {
       if (err) {
-        console.error("Error inserting new user into PostgreSQL database", err);
+        console.error("Error inserting new message into PostgreSQL database", err);
       } else {
-        console.log("New user inserted into PostgreSQL database");
+        console.log("New message posted");
       }
     })
 
@@ -176,7 +182,7 @@ app.post('/add-message-form', (req, res) => {
   "SELECT * FROM apphysics1",
   (err, result) => {
     if (err) {
-      console.error("Error fetching unread messages from PostgreSQL database", err);
+      console.error("Error fetching messages from PostgreSQL database", err);
     } else {
       console.log(result.rows);
     }
