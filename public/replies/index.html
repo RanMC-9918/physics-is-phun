@@ -11,7 +11,7 @@
 <body>
     <script>
         console.log(sessionStorage.getItem("id"));
-        if (sessionStorage.getItem("id") != null && sessionStorage.getItem("id") != undefined){window.location.href = window.location.origin + "/loggedin"};
+        if (sessionStorage.getItem("id")){window.location.href = window.location.origin + "/loggedin"};
     </script>
     <nav class="navbar">
         <div class="logo">
@@ -40,5 +40,6 @@
     <div class="mainBody">
         
     </div>
+    <script src="loadReplies.js"></script>
 </body>
 </html>

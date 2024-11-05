@@ -47,6 +47,7 @@ client.query(
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false}));
+app.use(bodyParser.json());
 const port = process.env.PORT || 8080;
 
 // EXPRESS JS MIDDLEWARE ------------------------------------------------------------------
@@ -66,36 +67,102 @@ app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "home", "index.html"));
 });
 
+app.get("/loggedin", (req,res) => {
+  
+  res.sendFile(path.join(__dirname, "public", "loggedin", "index.html"));
+})
+
 app.get("/favicon.ico", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "images", "favicon.ico"));
 });
 
-app.get("/chat/load", (req, res) => {
+app.get("/chat/load", async (req, res) => {
   
-  client.query("SELECT * FROM apphysics1", (err, req) => {
+  client.query("SELECT * FROM apphysics1", async (err, req) => {
     if (err) {
       console.error("Error fetching unread messages from PostgreSQL database", err);
     } else {
-      unreadMessages = req.rows;
+      let cardData = req.rows;
+      for(let i = 0; i < cardData.length; i++){
+        // console.log(cardData[i].author);
+        if(cardData[i].author != null) {
+          await getNameFromId(cardData[i].author).then((name) => {cardData[i].author = name;});
+        }
+        else{
+          cardData[i].author = 'Anonymous';
+        }
+      };
+      unreadMessages = cardData;
       res.send(unreadMessages);
     }
   });
 });
 
-//EXPRESS JS POST REQUESTS ------------------------------------------------------------------------
+app.get('/name/load/:id', (req, res) => {
+  const userID = req.params.id;
+  getNameFromId(userID).then((name) => {res.send(JSON.stringify({body: name}))});
+});
 
-app.post('/login-form', (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
-
-  console.log(`Username: ${username}, Password: ${password}`)
-  if (username.length > 50){
-    res.sendFile(path.join(__dirname, "public", "login", "index_error.html"));
-  }else{
-    res.redirect('/');
-  }
+app.get('/replies/:id/load', async (req, res) => {
+  const messageID = req.params.id;
+  client.query("SELECT * FROM replies WHERE id = " + messageID + "LIMIT 1;", (err, reply) => {
+    res.send(
+    JSON.stringify(
+      {
+        body: reply.rows[0].body,
+        author: reply.rows[0].author,
+        posted_at: reply.rows[0].posted_at,
+        replies: reply.rows[0].replies,
+        likes: reply.rows[0].likes
+      }
+    )
+  )
+  })
   
 })
+
+//EXPRESS JS POST REQUESTS ------------------------------------------------------------------------
+
+async function loginVerification(username,password){
+  return new Promise((resolve, reject) => {
+    client.query('SELECT id FROM accounts WHERE pass = $1 AND username = $2;', [password, username], (err, res) => {
+      if (err) {
+        reject(err);
+      } else if (res.rows.length > 0) {
+        resolve(res.rows[0].id);
+      } else {
+        resolve(false); // Login failed
+      }
+    });
+  });
+}
+async function getNameFromId(id){
+  return new Promise((resolve, reject) => {
+    client.query('SELECT username FROM accounts WHERE id = $1;', [id], (err, res) => {
+      if (err) {
+        reject(err);
+      }else{
+        resolve(res.rows[0].username);
+      }
+    });
+  });
+}
+
+app.post('/login-form', async (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+  console.log(`Username: ${username}, Password: ${password}`)
+  let verify;
+  await loginVerification(username,password).then((res) => {verify = res});
+  //console.log(verify);
+  if (verify != false){
+    console.log(verify);
+    res.send(`<script>sessionStorage.setItem("id", ${verify});\nwindow.location.href = (window.location.origin + "/loggedin")</script>`)
+    console.log(`Username - ${username} logged in`);
+  }else{
+    res.sendFile(path.join(__dirname, "public", "login", "index_error.html"));
+  }
+});
 
 
 
@@ -162,15 +229,17 @@ function checkDuplicateId(id) {
 
 
 app.post('/add-message-form', (req, res) => {
+  console.log(req.body);
   const title = req.body.title;
-  const question = req.body.question;
+  const question = req.body.message;
+  const author = req.body.id;
 
   //console.log(`Title: ${title}, Question: ${question}`)
 
   const currentDate = new Date();
   const formattedDate = currentDate.toISOString().split('T')[0]
 
-  client.query(`INSERT INTO apphysics1 (body, title, likes, posted_at) VALUES ('${question}', '${title}', 0, '${formattedDate}' );`, (err, res) => {
+  client.query(`INSERT INTO apphysics1 (body, title, likes, posted_at, author) VALUES ('${question}', '${title}', 0, '${formattedDate}', '${author}' );`, (err, res) => {
       if (err) {
         console.error("Error inserting new message into PostgreSQL database", err);
       } else {
@@ -184,16 +253,17 @@ app.post('/add-message-form', (req, res) => {
     if (err) {
       console.error("Error fetching messages from PostgreSQL database", err);
     } else {
-      console.log(result.rows);
     }
-  }
-)
+  })
 
-  if (title.length > 50){
-    res.sendFile(path.join(__dirname, "public", "add-message", "index_error.html"));
-  }else{
-    res.redirect('/chat');
-  }
+  
+  // res.redirect('/loggedIn-chat');
+
+  // if (title.length > 50){
+  //   res.sendFile(path.join(__dirname, "public", "add-message", "index_error.html"));
+  // }else{
+    
+  // }
 })
 
 app.listen(port);

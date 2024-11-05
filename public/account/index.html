@@ -7,12 +7,9 @@
     <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
     <link rel="stylesheet" href="../css/navbar.css" />
     <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <script>
-        console.log(sessionStorage.getItem("id"));
-        if (sessionStorage.getItem("id") != null && sessionStorage.getItem("id") != undefined){window.location.href = window.location.origin + "/loggedin"};
-    </script>
     <nav class="navbar">
         <div class="logo">
             <a href="../">
@@ -22,13 +19,10 @@
         </div>
         
         <ul>
-            <a href="../login">
-                <li class="nav-items">Login</li>
+            <a href="../account">
+                <li class="nav-items">Account</li>
             </a>
-            <a href="../signin">
-                <li class="nav-items">Signin</li>
-            </a>
-            <a href="../chat">
+            <a href="../loggedIn-chat">
                 <li class="nav-items">Chat</li>
             </a>
 
@@ -38,7 +32,11 @@
         </ul>
     </nav>
     <div class="mainBody">
-        
+        <h1>Profile Information: </h1>
+        <h3>Name: </h3>
+        <h3>Email address: </h3>
+        <h3>Password: </h3>
+        <button onclick="sessionStorage.setItem('id', 0);window.location.href = window.location.origin + '/';">Logout</button>
     </div>
 </body>
 </html>

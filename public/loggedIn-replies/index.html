@@ -9,10 +9,6 @@
     <link rel="stylesheet" href="../css/global.css" />
 </head>
 <body>
-    <script>
-        console.log(sessionStorage.getItem("id"));
-        if (sessionStorage.getItem("id") != null && sessionStorage.getItem("id") != undefined){window.location.href = window.location.origin + "/loggedin"};
-    </script>
     <nav class="navbar">
         <div class="logo">
             <a href="../">
@@ -22,13 +18,10 @@
         </div>
         
         <ul>
-            <a href="../login">
-                <li class="nav-items">Login</li>
+            <a href="../account">
+                <li class="nav-items">Account</li>
             </a>
-            <a href="../signin">
-                <li class="nav-items">Signin</li>
-            </a>
-            <a href="../chat">
+            <a href="../loggedIn-chat">
                 <li class="nav-items">Chat</li>
             </a>
 

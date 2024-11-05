@@ -23,7 +23,7 @@ fetch(window.location.origin + "/chat/load").then((res) => {
         <div class="footer">
           <p class="author">-${e.author}</p>
           <a class="replies">
-            <button onclick="window.location.href = window.location.origin + '/replies';">See Replies</button>
+            <button onclick="window.location.href = window.location.origin + '/loggedIn-replies';">See Replies</button>
           </a>
         </div>
       </div>`;
@@ -40,6 +40,5 @@ function formatDate(e){
   e = e.substring(e.indexOf('-')+1);
   let day = parseInt(e);
   day --;
-
   return month + ' / ' + day + ' / ' + year;
 }

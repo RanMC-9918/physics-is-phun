@@ -6,3 +6,8 @@
 *{
     font-family: "Inter", sans-serif;
 }
+
+h1{
+    display: block;
+    text-align: center;
+}

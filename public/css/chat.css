@@ -2,8 +2,12 @@
   text-align: center;
   padding: 10px;
   width: 100%;
+}
+
+body{
   overflow-x: hidden;
 }
+
 #chat-container {
   width: 100%;
   display: flex;
@@ -23,9 +27,9 @@
   border-radius: 10px;
   background-color: rgb(240, 214, 180);
   text-align: left;
-  height: 250px;
+  min-height: 250px;
   max-width: calc(100% - 20px);
-  min-width: 100px;
+  min-width: 150px;
   flex: 1 0 auto;
   display: flex;
   flex-direction: column;
@@ -76,6 +80,7 @@
   align-items: flex-end;
   gap: 10px;
   justify-self: flex-end;
+  margin-top: auto;
 }
 
 .card .replies button {
@@ -101,18 +106,19 @@ button:hover {
   width: 105px;
   height: 50px;
   border-radius: 10px;
-  background-color: #8f96d3;
+  background: linear-gradient(to bottom right, rgb(184, 162, 234) 20%, rgb(177, 177, 236) 50%, rgb(159, 141, 209) 80%);
   color: white;
   font-weight: 500;
   font-size: 1.3em;
-  border: solid #8881be 2px;
+  border: outset #9b95c9 3px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .post:hover {
-  background-color: #9089cd;
+  background: linear-gradient(to bottom right, rgb(184, 162, 234) 30%, rgb(177, 177, 236) 70%, rgb(159, 141, 209) 100%);
   cursor: pointer;
+  border: inset #9b95c9 3px;
   scale: 1;
 }
 
