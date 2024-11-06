@@ -1,8 +1,9 @@
 let replyContainer = document.getElementById('replyContainer');
 //const queryParam = req.query.id;
-console.log(window.location.href)
-fetch(window.location.origin + `/replies?id=120`).then((res) => {
-res.json().then((data) => {
+console.log(window.location.origin + `/replies/load?id=120`)
+let url = window.location.href;
+fetch(url.substring(0, url.indexOf("?")) + "load" + url.substring(url.indexOf("?"))).then((res) => {
+    res.json().then((data) => {
     //console.log(data);
     data.forEach((e) => {
     replyContainer.innerHTML += `
