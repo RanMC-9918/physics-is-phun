@@ -23,7 +23,7 @@ fetch(window.location.origin + "/chat/load").then((res) => {
         <div class="footer">
           <p class="author">-${e.author}</p>
           <a class="replies">
-            <button onclick="window.location.href = window.location.origin + '/loggedIn-replies';">See Replies</button>
+            <button onclick="window.location.href = window.location.origin + '/loggedIn-replies/?id=${e.id}';">See Replies</button>
           </a>
         </div>
       </div>`;

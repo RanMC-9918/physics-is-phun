@@ -1,7 +1,7 @@
 let replyContainer = document.getElementById('replyContainer');
+//const queryParam = req.query.id;
 
-
-fetch(window.location.origin + "/reply?id=-290108333").then((res) => {
+fetch(window.location.href).then((res) => {
 res.json().then((data) => {
     //console.log(data);
     data.forEach((e) => {

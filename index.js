@@ -98,11 +98,11 @@ app.get("/chat/load", async (req, res) => {
     }
   });
 });
-app.get("/reply", async (req, res) => {
-  const queryParam = req.query.id;
-  //console.log(queryParam)
-  let cardData = await getReplys(queryParam);
-  //console.log(cardData)
+app.get("/replies/:id", async (req, res) => {
+  const id = req.params.id;
+  console.log(id)
+  let cardData = await getReplys(id);
+  console.log(cardData)
   let body = cardData.reply.substring(2,cardData.reply.indexOf(',')-1)
   cardData.reply = cardData.reply.substring(cardData.reply.indexOf(',')+1)
   let date = cardData.reply.substring(0,cardData.reply.indexOf(','))
@@ -111,7 +111,23 @@ app.get("/reply", async (req, res) => {
   cardData.reply = cardData.reply.substring(cardData.reply.indexOf(',')+1)
   let likes = cardData.reply.substring(0,cardData.reply.indexOf(')'))
   unreadMessages = [{body: `${body}`,date: `${date}`,author: `${await getNameFromId(author)}`,likes: `${likes}`}];
-  //console.log(unreadMessages)
+  console.log(unreadMessages)
+  res.send(unreadMessages);
+});
+app.get("/loggedIn-replies/:id", async (req, res) => {
+  const id = req.params.id;
+  console.log(id)
+  let cardData = await getReplys(id);
+  console.log(cardData)
+  let body = cardData.reply.substring(2,cardData.reply.indexOf(',')-1)
+  cardData.reply = cardData.reply.substring(cardData.reply.indexOf(',')+1)
+  let date = cardData.reply.substring(0,cardData.reply.indexOf(','))
+  cardData.reply = cardData.reply.substring(cardData.reply.indexOf(',')+1)
+  let author = cardData.reply.substring(0,cardData.reply.indexOf(','))
+  cardData.reply = cardData.reply.substring(cardData.reply.indexOf(',')+1)
+  let likes = cardData.reply.substring(0,cardData.reply.indexOf(')'))
+  unreadMessages = [{body: `${body}`,date: `${date}`,author: `${await getNameFromId(author)}`,likes: `${likes}`}];
+  console.log(unreadMessages)
   res.send(unreadMessages);
 });
 
