@@ -98,11 +98,17 @@ app.get("/chat/load", async (req, res) => {
     }
   });
 });
+app.get("/question/load", async (req,res) => {
+  const id = req.query.id;
+  let out = await getQuestion(id)
+  out.author = await getNameFromId(out.author)
+  res.send(JSON.stringify({resolved: `${out.resolved}`, title: `${out.title}`,body: `${out.body}`,posted_at: `${out.posted_at}`,author: `${out.author}`}))
+})
 app.get("/replies/load", async (req, res) => {
   const id = req.query.id;
-  console.log(id)
+  //console.log(id)
   let cardData = await getReplys(id);
-  console.log(cardData + "siodhfgoasdhjgoias;gfjkfd")
+  //console.log(cardData + "siodhfgoasdhjgoias;gfjkfd")
   if(cardData[0]){
     let body = cardData[0].reply.substring(2,cardData[0].reply.indexOf(',')-1)
     cardData[0].reply = cardData[0].reply.substring(cardData[0].reply.indexOf(',')+1)
@@ -112,7 +118,7 @@ app.get("/replies/load", async (req, res) => {
     cardData[0].reply = cardData[0].reply.substring(cardData[0].reply.indexOf(',')+1)
     let likes = cardData[0].reply.substring(0,cardData[0].reply.indexOf(')'))
     replies = JSON.stringify([{body: `${body}`,date: `${date}`,author: `${await getNameFromId(author)}`,likes: `${likes}`}]);
-    console.log(replies)
+    //console.log(replies)
     res.send(replies);
   }
   else{
@@ -122,19 +128,25 @@ app.get("/replies/load", async (req, res) => {
 });
 app.get("/loggedIn-replies/load", async (req, res) => {
   const id = req.query.id;
-  console.log(id)
+  //console.log(id)
   let cardData = await getReplys(id);
-  console.log(cardData)
-  let body = cardData.reply.substring(2,cardData.reply.indexOf(',')-1)
-  cardData.reply = cardData.reply.substring(cardData.reply.indexOf(',')+1)
-  let date = cardData.reply.substring(0,cardData.reply.indexOf(','))
-  cardData.reply = cardData.reply.substring(cardData.reply.indexOf(',')+1)
-  let author = cardData.reply.substring(0,cardData.reply.indexOf(','))
-  cardData.reply = cardData.reply.substring(cardData.reply.indexOf(',')+1)
-  let likes = cardData.reply.substring(0,cardData.reply.indexOf(')'))
-  unreadMessages = [{body: `${body}`,date: `${date}`,author: `${await getNameFromId(author)}`,likes: `${likes}`}];
-  console.log(unreadMessages)
-  res.send(unreadMessages);
+  //console.log(cardData + "siodhfgoasdhjgoias;gfjkfd")
+  if(cardData[0]){
+    let body = cardData[0].reply.substring(2,cardData[0].reply.indexOf(',')-1)
+    cardData[0].reply = cardData[0].reply.substring(cardData[0].reply.indexOf(',')+1)
+    let date = cardData[0].reply.substring(0,cardData[0].reply.indexOf(','))
+    cardData[0].reply = cardData[0].reply.substring(cardData[0].reply.indexOf(',')+1)
+    let author = cardData[0].reply.substring(0,cardData[0].reply.indexOf(','))
+    cardData[0].reply = cardData[0].reply.substring(cardData[0].reply.indexOf(',')+1)
+    let likes = cardData[0].reply.substring(0,cardData[0].reply.indexOf(')'))
+    replies = JSON.stringify([{body: `${body}`,date: `${date}`,author: `${await getNameFromId(author)}`,likes: `${likes}`}]);
+    //console.log(replies)
+    res.send(replies);
+  }
+  else{
+    console.log('error')
+    res.send([JSON.stringify({body:"NOT_FOUND"})]);
+  }
 });
 
 app.get('/name/load/:id', (req, res) => {
@@ -301,7 +313,15 @@ async function getReplys(id) {
     throw err; // Or handle the error as needed
   }
 }
-
+async function getQuestion(id) {
+  try {
+    const res = await client.query('SELECT resolved, title, body, posted_at, author FROM apphysics1 WHERE id = $1;', [id]);
+    return res.rows[0];
+  } catch (err) {
+    console.error('Error fetching question:', err);
+    throw err; // Or handle the error as needed
+  }
+}
 function validateEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
