@@ -1,3 +1,14 @@
 .logo-color {
     color: #996f37;
 }
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+        scale: 0.7;
+    }
+    100% {
+        opacity: 1;
+        scale: 1;
+    }
+}

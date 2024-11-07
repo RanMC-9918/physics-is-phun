@@ -20,8 +20,13 @@ form.addEventListener('submit', event => {
             },
             body: JSON.stringify({title: title, message: message, id: id})
         }).then(response => {
+            redirectToChat();
             console.log(response);
-            window.location.href = (window.location.origin + "/loggedIn-chat");
         });
+        redirectToChat();
     }
 })
+
+function redirectToChat() {
+    window.location.href = window.location.origin + "/loggedIn-chat";
+}

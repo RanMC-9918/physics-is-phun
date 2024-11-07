@@ -4,6 +4,9 @@ const path = require("path");
 const { Pool } = require("pg");
 const bodyParser = require('body-parser')
 
+
+ let digits = /[0-9]*/;
+
 let unreadMessages = [];
 
 const debugMode = false;
@@ -33,16 +36,7 @@ client.connect((err) => {
 //   }
 // )
 
-client.query(
-  "SELECT * FROM apphysics1",
-  (err, result) => {
-    if (err) {
-      console.error("Error fetching unread messages from PostgreSQL database", err);
-    } else {
-      unreadMessages = result.rows;
-    }
-  }
-)
+refreshMessages(); 
 
 
 const app = express();
@@ -77,104 +71,67 @@ app.get("/favicon.ico", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "images", "favicon.ico"));
 });
 
-app.get("/chat/load", async (req, res) => {
+app.get("/chat/load", (req, res) => {
+
+  res.send(unreadMessages);
   
-  client.query("SELECT * FROM apphysics1", async (err, req) => {
-    if (err) {
-      console.error("Error fetching unread messages from PostgreSQL database", err);
-    } else {
-      let cardData = req.rows;
-      for(let i = 0; i < cardData.length; i++){
-        // console.log(cardData[i].author);
-        if(cardData[i].author != null) {
-          await getNameFromId(cardData[i].author).then((name) => {cardData[i].author = name;});
-        }
-        else{
-          cardData[i].author = 'Anonymous';
-        }
-      };
-      unreadMessages = cardData;
-      res.send(unreadMessages);
-    }
-  });
 });
 app.get("/question/load", async (req,res) => {
-  const id = req.query.id;
-  let out = await getQuestion(id)
-  out.author = await getNameFromId(out.author)
-  res.send(JSON.stringify({resolved: `${out.resolved}`, title: `${out.title}`,body: `${out.body}`,posted_at: `${out.posted_at}`,author: `${out.author}`}))
+  const id = req.query.id.match(digits).join();
+  let out = await getQuestion(id);
+  if(digits.test(id) && out !== undefined && out && out !== null) {
+    
+    if(digits.test(out.author)){
+      out.author = await getNameFromId(out.author)
+    }
+    else{
+      out.author = "User Not Found"
+    }
+    res.send(JSON.stringify({resolved: `${out.resolved}`, title: `${out.title}`,body: `${out.body}`,posted_at: `${out.posted_at}`,author: `${out.author}`}))
+  }
+  else{
+    res.send(JSON.stringify({ body: "NOT_FOUND" }))
+  }
 })
 app.get("/replies/load", async (req, res) => {
-  const id = req.query.id;
-  //console.log(id)
-  let cardData = await getReplys(id);
+  const id = req.query.id.match(digits).join();
+  // console.log(id)
+  let cardData = await getReplies(id);
   //console.log(cardData + "siodhfgoasdhjgoias;gfjkfd")
-  if(cardData[0]){
-    let body = cardData[0].reply.substring(2,cardData[0].reply.indexOf(',')-1)
-    cardData[0].reply = cardData[0].reply.substring(cardData[0].reply.indexOf(',')+1)
-    let date = cardData[0].reply.substring(0,cardData[0].reply.indexOf(','))
-    cardData[0].reply = cardData[0].reply.substring(cardData[0].reply.indexOf(',')+1)
-    let author = cardData[0].reply.substring(0,cardData[0].reply.indexOf(','))
-    cardData[0].reply = cardData[0].reply.substring(cardData[0].reply.indexOf(',')+1)
-    let likes = cardData[0].reply.substring(0,cardData[0].reply.indexOf(')'))
-    replies = JSON.stringify([{body: `${body}`,date: `${date}`,author: `${await getNameFromId(author)}`,likes: `${likes}`}]);
+  console.log(cardData[0] + "duoifhusodnf");
+  if (cardData[0]) {
+    console.log(cardData[0]);
+    let body = cardData[0].reply.substring(
+      2,
+      cardData[0].reply.indexOf(",") - 1
+    );
+    cardData[0].reply = cardData[0].reply.substring(
+      cardData[0].reply.indexOf(",") + 1
+    );
+    let date = cardData[0].reply.substring(0, cardData[0].reply.indexOf(","));
+    cardData[0].reply = cardData[0].reply.substring(
+      cardData[0].reply.indexOf(",") + 1
+    );
+    let author = cardData[0].reply.substring(0, cardData[0].reply.indexOf(","));
+    cardData[0].reply = cardData[0].reply.substring(
+      cardData[0].reply.indexOf(",") + 1
+    );
+    let likes = cardData[0].reply.substring(0, cardData[0].reply.indexOf(")"));
+    replies = JSON.stringify([
+      {
+        body: `${body}`,
+        date: `${date}`,
+        author: `${await getNameFromId(author)}`,
+        likes: `${likes}`,
+      },
+    ]);
     //console.log(replies)
     res.send(replies);
-  }
-  else{
-    console.log('error')
-    res.send([JSON.stringify({body:"NOT_FOUND"})]);
-  }
-});
-app.get("/loggedIn-replies/load", async (req, res) => {
-  const id = req.query.id;
-  //console.log(id)
-  let cardData = await getReplys(id);
-  //console.log(cardData + "siodhfgoasdhjgoias;gfjkfd")
-  if(cardData[0]){
-    let body = cardData[0].reply.substring(2,cardData[0].reply.indexOf(',')-1)
-    cardData[0].reply = cardData[0].reply.substring(cardData[0].reply.indexOf(',')+1)
-    let date = cardData[0].reply.substring(0,cardData[0].reply.indexOf(','))
-    cardData[0].reply = cardData[0].reply.substring(cardData[0].reply.indexOf(',')+1)
-    let author = cardData[0].reply.substring(0,cardData[0].reply.indexOf(','))
-    cardData[0].reply = cardData[0].reply.substring(cardData[0].reply.indexOf(',')+1)
-    let likes = cardData[0].reply.substring(0,cardData[0].reply.indexOf(')'))
-    replies = JSON.stringify([{body: `${body}`,date: `${date}`,author: `${await getNameFromId(author)}`,likes: `${likes}`}]);
-    //console.log(replies)
-    res.send(replies);
-  }
-  else{
-    console.log('error')
-    res.send([JSON.stringify({body:"NOT_FOUND"})]);
+  } else {
+    console.log("error");
+    res.send([JSON.stringify({ body: "NOT_FOUND" })]);
   }
 });
-
-app.get('/name/load/:id', (req, res) => {
-  const userID = req.params.id;
-  getNameFromId(userID).then((name) => {res.send(JSON.stringify({body: name}))});
-});
-
-
-
-//EXPRESS JS POST REQUESTS ------------------------------------------------------------------------
-
-
-app.post('/login-form', async (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
-  console.log(`Username: ${username}, Password: ${password}`)
-  let verify;
-  await loginVerification(username,password).then((res) => {verify = res});
-  //console.log(verify);
-  if (verify != false){
-    console.log(verify);
-    res.send(`<script>sessionStorage.setItem("id", ${verify});\nwindow.location.href = (window.location.origin + "/loggedin")</script>`)
-    console.log(`Username - ${username} logged in`);
-  }else{
-    res.sendFile(path.join(__dirname, "public", "login", "index_error.html"));
-  }
-});
-
 
 
 
@@ -296,30 +253,32 @@ async function loginVerification(username,password){
 async function getNameFromId(id){
   return new Promise((resolve, reject) => {
     client.query('SELECT username FROM accounts WHERE id = $1;', [id], (err, res) => {
-      if (err) {
-        reject(err);
+      if (err || res.rows.length < 0 || res.rows[0] === undefined) {
+        resolve("User not found");
       }else{
         resolve(res.rows[0].username);
       }
     });
   });
 }
-async function getReplys(id) {
-  try {
-    const res = await client.query('SELECT reply FROM apphysics1 WHERE id = $1;', [id]);
-    return res.rows;
-  } catch (err) {
-    console.error('Error fetching replies:', err);
-    throw err; // Or handle the error as needed
+async function getReplies(id) {
+  if(!digits.test(id))
+  {
+    return [];
   }
+  else{
+    const res = await client.query('SELECT reply FROM apphysics1 WHERE id = $1;', [id]);
+    return res.rows[0];
+  }
+  
 }
 async function getQuestion(id) {
-  try {
-    const res = await client.query('SELECT resolved, title, body, posted_at, author FROM apphysics1 WHERE id = $1;', [id]);
+  if(digits.test(id)){
+    const res = await client.query('SELECT * FROM apphysics1 WHERE id = $1;', [id]);
     return res.rows[0];
-  } catch (err) {
-    console.error('Error fetching question:', err);
-    throw err; // Or handle the error as needed
+  }else{
+    console.log("ID INVALID");
+    return {};
   }
 }
 function validateEmail(email) {
@@ -359,3 +318,30 @@ function checkDuplicateId1(id) {
         }
       })
 }
+
+function refreshMessages() {
+    client.query("SELECT * FROM apphysics1 LIMIT 50", async (err, req) => {
+      if (err) {
+        console.error(
+          "Error fetching unread messages from PostgreSQL database",
+          err
+        );
+      } else {
+        let cardData = req.rows;
+        for (let i = 0; i < cardData.length; i++) {
+          // console.log(cardData[i].author);
+          if (cardData[i].author != null) {
+            await getNameFromId(cardData[i].author).then((name) => {
+              cardData[i].author = name;
+            });
+          } else {
+            cardData[i].author = "Anonymous";
+          }
+        }
+        console.log("refreshed messages");
+        unreadMessages = cardData;
+      }
+    });
+}
+
+setInterval(refreshMessages, 30000);

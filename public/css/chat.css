@@ -125,3 +125,12 @@ button:hover {
 .post svg {
   height: 35px;
 }
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

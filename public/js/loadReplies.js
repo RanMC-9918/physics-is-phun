@@ -11,7 +11,7 @@ fetch(url.substring(0, url.indexOf("?")) + "load" + url.substring(url.indexOf("?
         <div class="header">
         <h2>Reply</h2>
         <div class="line"></div>
-        <h2 class="date">${e.date}</h2>
+        <h2 class="date">${e.posted_at}</h2>
         </div>
         <br/>
         <div class="body">

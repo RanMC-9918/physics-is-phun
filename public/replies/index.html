@@ -12,7 +12,7 @@
 <body>
     <script>
         //console.log(sessionStorage.getItem("id"));
-        if (sessionStorage.getItem("id") != null && sessionStorage.getItem("id") != undefined && sessionStorage.getItem("id") != 0){window.location.href = window.location.origin + "/loggedIn-chat"};
+        if (sessionStorage.getItem("id") != null && sessionStorage.getItem("id") != undefined && sessionStorage.getItem("id") != 0){window.location.href = window.location.origin + "/loggedIn-replies" + window.location.href.substring(window.location.href.indexOf("?"))};
     </script>
     <nav class="navbar">
         <div class="logo">
@@ -40,10 +40,10 @@
     </nav>
     <div class="mainBody">
         <div id="question">
-            <script src="loadQuestion.js"></script>
+            <script src="../js/loadQuestion.js"></script>
         </div>
         <div id="replyContainer">
-            <script src="loadReplies.js"></script>
+            <script src="../js/loadReplies.js"></script>
         </div>
     </div>
 </body>
