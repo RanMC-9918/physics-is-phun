@@ -98,39 +98,20 @@ app.get("/replies/load", async (req, res) => {
   // console.log(id)
   let cardData = await getReplies(id);
   //console.log(cardData + "siodhfgoasdhjgoias;gfjkfd")
-  console.log(cardData[0] + "duoifhusodnf");
-  if (cardData[0]) {
-    console.log(cardData[0]);
-    let body = cardData[0].reply.substring(
-      2,
-      cardData[0].reply.indexOf(",") - 1
-    );
-    cardData[0].reply = cardData[0].reply.substring(
-      cardData[0].reply.indexOf(",") + 1
-    );
-    let date = cardData[0].reply.substring(0, cardData[0].reply.indexOf(","));
-    cardData[0].reply = cardData[0].reply.substring(
-      cardData[0].reply.indexOf(",") + 1
-    );
-    let author = cardData[0].reply.substring(0, cardData[0].reply.indexOf(","));
-    cardData[0].reply = cardData[0].reply.substring(
-      cardData[0].reply.indexOf(",") + 1
-    );
-    let likes = cardData[0].reply.substring(0, cardData[0].reply.indexOf(")"));
-    replies = JSON.stringify([
-      {
-        body: `${body}`,
-        date: `${date}`,
-        author: `${await getNameFromId(author)}`,
-        likes: `${likes}`,
-      },
-    ]);
-    //console.log(replies)
-    res.send(replies);
-  } else {
-    console.log("error");
-    res.send([JSON.stringify({ body: "NOT_FOUND" })]);
-  }
+  let replies = [];
+  let promises = cardData.map(
+    async (element) => {
+      replies.push(await formatReply(element.reply));
+    }
+  );
+
+  await Promise.all(promises)
+  //console.log(replies);
+  
+  replies = JSON.stringify(replies);
+  //console.log(replies)
+  res.send(replies);
+  
 });
 
 
@@ -155,7 +136,7 @@ app.post('/signin-form', (req, res) => {
     while (checkDuplicateId(id)){
       id = generate10DigitRandomNumber();
     }
-    console.log(id);
+    //console.log(id);
     const currentDate = new Date();
     const formattedDate = currentDate.toISOString().split('T')[0]
     client.query(`INSERT INTO accounts (username, pass, email, creation_date, id) VALUES ('${username}', '${password}', '${email}', '${formattedDate}', ${id});`, (err, res) => {
@@ -264,11 +245,12 @@ async function getNameFromId(id){
 async function getReplies(id) {
   if(!digits.test(id))
   {
+    console.log("ID INVALID");
     return [];
   }
   else{
-    const res = await client.query('SELECT reply FROM apphysics1 WHERE id = $1;', [id]);
-    return res.rows[0];
+    const res = await client.query('SELECT reply FROM apphysics1 WHERE id = ' + id + ';');
+    return res.rows;
   }
   
 }
@@ -306,18 +288,6 @@ function checkDuplicateId(id) {
       })
 }
 
-function checkDuplicateId1(id) {
-  client.query(`SELECT * FROM apphysics1 WHERE id = ${id}`, (err, result) => {
-        if (err) {
-          console.error("Error fetching user from PostgreSQL database", err);
-        } else {
-          if(result.rows.length > 0){
-            return true;
-          }
-          return false;
-        }
-      })
-}
 
 function refreshMessages() {
     client.query("SELECT * FROM apphysics1 LIMIT 50", async (err, req) => {
@@ -342,6 +312,27 @@ function refreshMessages() {
         unreadMessages = cardData;
       }
     });
+}
+
+async function formatReply(data) {
+  let body = data.substring(
+    2,
+    data.indexOf(",") - 1
+  );
+  data = data.substring(
+    data.indexOf(",") + 1
+  );
+  let date = data.substring(0, data.indexOf(","));
+  data = data.substring(
+    data.indexOf(",") + 1
+  );
+  let author = data.substring(0, data.indexOf(","));
+  data = data.substring(
+    data.indexOf(",") + 1
+  );
+  let likes = data.substring(0, data.indexOf(")"));
+  author = await getNameFromId(author);
+  return {body: body, posted_at: date, likes: likes, author: author};
 }
 
 setInterval(refreshMessages, 30000);

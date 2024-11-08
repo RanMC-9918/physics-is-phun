@@ -8,12 +8,13 @@ fetch(url.substring(0, url.indexOf("?")) + "load" + url.substring(url.indexOf("?
     res.json().then((data) => {
     //console.log(data);
     data.forEach((e) => {
+        console.log(e);
     replyContainer.innerHTML += `
     <div class="card">
         <div class="header">
         <h2>Reply</h2>
         <div class="line"></div>
-        <h2 class="date">${e.posted_at}</h2>
+        <h2 class="date">${formatDate(e.posted_at)}</h2>
         </div>
         <br/>
         <div class="body">
@@ -30,13 +31,10 @@ fetch(url.substring(0, url.indexOf("?")) + "load" + url.substring(url.indexOf("?
 
 
 function formatDate(e){
-    e = e.posted_at.substring(0, e.posted_at.indexOf('T'));
-    let year = e.substring(0,e.indexOf('-'))
-    e = e.substring(e.indexOf('-')+1);
-    let month = e.substring(0, e.indexOf('-'));
-    e = e.substring(e.indexOf('-')+1);
-    let day = parseInt(e);
-    day --;
+    e = new Date(e);
+    let year = e.getFullYear();
+    let month = e.getMonth();
+    let day = e.getDay();
 
     return month + ' / ' + day + ' / ' + year;
 }
