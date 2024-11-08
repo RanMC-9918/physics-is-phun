@@ -2,7 +2,9 @@ let replyContainer = document.getElementById('replyContainer');
 //const queryParam = req.query.id;
 console.log(window.location.origin + `/replies/load?id=120`)
 let url = window.location.href;
+replyContainer.innerHTML = "Loading...";
 fetch(url.substring(0, url.indexOf("?")) + "load" + url.substring(url.indexOf("?"))).then((res) => {
+    replyContainer.innerHTML = '';
     res.json().then((data) => {
     //console.log(data);
     data.forEach((e) => {

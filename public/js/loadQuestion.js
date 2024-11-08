@@ -1,13 +1,15 @@
 let question = document.getElementById('question');
+question.innerHTML = "Loading...";
 
-let url = window.location.href.substring(window.location.href.indexOf("?"))
-fetch(window.location.origin + `/question/load` + url).then((res) => {
+let id = window.location.href.substring(window.location.href.indexOf("?"))
+fetch(window.location.origin + `/question/load` + id).then((res) => {
     if (res.status == 404) {
         question.innerHTML = 404;
         console.log("404 question not found");
     }
     else{
         res.json().then((data) => {
+            console.log(data);
             question.innerHTML = `
             <div class="card">
                 <div class="header">
@@ -23,7 +25,7 @@ fetch(window.location.origin + `/question/load` + url).then((res) => {
                 <div class="footer">
                     <p class="author">-${data.author}</p>
                 </div>
-            </div>`
+            </div>`;
         })
     }
 })
