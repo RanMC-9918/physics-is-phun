@@ -67,6 +67,13 @@ app.get("/loggedin", (req,res) => {
   res.sendFile(path.join(__dirname, "public", "loggedin", "index.html"));
 })
 
+app.get("/name/load", async (req, res) => {
+  let id = req.query.id;
+  console.log(id)
+  id = await getNameFromId(id);
+ res.send( JSON.stringify({body: id}));
+})
+
 app.get("/favicon.ico", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "images", "favicon.ico"));
 });
@@ -112,6 +119,25 @@ app.get("/replies/load", async (req, res) => {
   //console.log(replies)
   res.send(replies);
   
+});
+
+
+
+app.post("/login-form", async (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+
+  console.log(`Username: ${username}, Password: ${password}`);
+
+  //console.log(validateEmail(email));
+  let id = await loginVerification(username, password);
+  if (password.length <= 8 && id != false) {
+    //send to error page
+    res.sendFile(path.join(__dirname, "public", "login", "index_error.html"));
+  } else {
+
+    res.send(`<body><script> sessionStorage.setItem("id", ${id}); window.location.href = window.location.origin;</script></body>`)
+  }
 });
 
 
@@ -190,6 +216,8 @@ app.post('/add-message-form', (req, res) => {
     }
   });
 
+  
+
   client.query(
   "SELECT * FROM apphysics1",
   (err, result) => {
@@ -232,15 +260,8 @@ async function loginVerification(username,password){
   });
 }
 async function getNameFromId(id){
-  return new Promise((resolve, reject) => {
-    client.query('SELECT username FROM accounts WHERE id = $1;', [id], (err, res) => {
-      if (err || res.rows.length < 0 || res.rows[0] === undefined) {
-        resolve("User not found");
-      }else{
-        resolve(res.rows[0].username);
-      }
-    });
-  });
+   let name = await client.query('SELECT username FROM accounts WHERE id = $1;', [id]);
+   return name.rows[0].username;
 }
 async function getReplies(id) {
   if(!digits.test(id))

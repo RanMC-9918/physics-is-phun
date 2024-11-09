@@ -19,10 +19,13 @@
         </div>
         
         <ul>
-            <a href="../account">
-                <li class="nav-items">Account</li>
+            <a href="../login">
+                <li class="nav-items">Login</li>
             </a>
-            <a href="../loggedIn-chat">
+            <a href="../signin">
+                <li class="nav-items">Signin</li>
+            </a>
+            <a href="../chat">
                 <li class="nav-items">Chat</li>
             </a>
 
@@ -32,19 +35,22 @@
         </ul>
     </nav>
     <div id="mainBody">
+        <h1>Question</h1>
         <div id="question">
-            <script src="../js/loadQuestion.js"></script>
+            
         </div>
-        <h1>Replies</h1>
+        <h2>Replies</h2>
         <div id="replyContainer">
-            <script src="../js/loadReplies.js"></script>
+            
         </div>
-        <a href="../add-message">
-        <button class="post">
-            <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="45" d="M256 112v288M400 256H112"/></svg>
-            Add
-        </button>
-        </a>
+
+        
     </div>
+    <button class="post" id="reply">
+    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="45" d="M256 112v288M400 256H112"/></svg>
+    Add
+    </button>
+    <script src="../js/loadReplies.js"></script>
+    <script src="../js/loadQuestion.js"></script>
 </body>
 </html>

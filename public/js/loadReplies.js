@@ -1,19 +1,29 @@
 let replyContainer = document.getElementById('replyContainer');
 //const queryParam = req.query.id;
-console.log(window.location.origin + `/replies/load?id=120`)
+
 let url = window.location.href;
+
+console.log(window.location.origin + "/replies/load" + url.substring(url.indexOf("?")))
+
+
+
 replyContainer.innerHTML = "Loading...";
-fetch(url.substring(0, url.indexOf("?")) + "load" + url.substring(url.indexOf("?"))).then((res) => {
-    replyContainer.innerHTML = '';
-    res.json().then((data) => {
+
+
+fetch(
+  window.location.origin + "/replies/load" + url.substring(url.indexOf("?"))
+).then((res) => {
+  replyContainer.innerHTML = "";
+  res.json().then((data) => {
     //console.log(data);
     data.forEach((e) => {
-        console.log(e);
-    if(e == 0){
-        replyContainer.innerHTML = '<h3 style="text-align: left;margin-left: 20px; font-weight: normal;">No replies found. Maybe you can be the first :)</h3>';
+      console.log(e);
+      if (e == 0) {
+        replyContainer.innerHTML =
+          '<h3 style="text-align: left;margin-left: 20px; font-weight: normal;">No replies found. Maybe you can be the first :)</h3>';
         return;
-    }
-    replyContainer.innerHTML += `
+      }
+      replyContainer.innerHTML += `
     <div class="card">
         <div class="header">
         <h2>Reply</h2>
@@ -31,7 +41,7 @@ fetch(url.substring(0, url.indexOf("?")) + "load" + url.substring(url.indexOf("?
         </div>
     </div>`;
     });
-});
+  });
 });
 
 
