@@ -9,6 +9,10 @@ fetch(url.substring(0, url.indexOf("?")) + "load" + url.substring(url.indexOf("?
     //console.log(data);
     data.forEach((e) => {
         console.log(e);
+    if(e == 0){
+        replyContainer.innerHTML = '<h3 style="text-align: left;margin-left: 20px; font-weight: normal;">No replies found. Maybe you can be the first :)</h3>';
+        return;
+    }
     replyContainer.innerHTML += `
     <div class="card">
         <div class="header">
@@ -23,6 +27,7 @@ fetch(url.substring(0, url.indexOf("?")) + "load" + url.substring(url.indexOf("?
         <br />
         <div class="footer">
         <p class="author">-${e.author}</p>
+        
         </div>
     </div>`;
     });

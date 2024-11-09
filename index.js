@@ -289,7 +289,7 @@ function checkDuplicateId(id) {
 }
 
 
-function refreshMessages() {
+async function refreshMessages() {
     client.query("SELECT * FROM apphysics1 LIMIT 50", async (err, req) => {
       if (err) {
         console.error(
@@ -307,6 +307,12 @@ function refreshMessages() {
           } else {
             cardData[i].author = "Anonymous";
           }
+          console.log(cardData[i].reply);
+          let bracket = /"/g; // regexp to find qoutation marks
+          cardData[i].replies =
+            cardData[i].reply == null
+              ? 0
+              : cardData[i].reply.match(bracket).length / 2;
         }
         console.log("refreshed messages");
         unreadMessages = cardData;
@@ -315,6 +321,7 @@ function refreshMessages() {
 }
 
 async function formatReply(data) {
+  if(data == null) return 0;
   let body = data.substring(
     2,
     data.indexOf(",") - 1
@@ -335,4 +342,4 @@ async function formatReply(data) {
   return {body: body, posted_at: date, likes: likes, author: author};
 }
 
-setInterval(refreshMessages, 30000);
+setInterval(refreshMessages, 18000000); //5mins 1000 * 60 * 60 * 5

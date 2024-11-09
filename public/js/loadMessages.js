@@ -14,7 +14,7 @@ fetch(window.location.origin + "/chat/load").then((res) => {
       counter++;
       let newCard = document.createElement('div');
       newCard.classList.add("card");
-      newCard.style = `opacity: 0;animation: fade-in 0.7s ${counter / 9}s forwards`;
+      newCard.style = `opacity: 0;animation: fade-in 0.7s ${Math.log(counter*3) / 6}s forwards`; //log as easing function
       newCard.innerHTML = `
         <div class="header">
           <h2>${e.title}</h2>
@@ -28,10 +28,11 @@ fetch(window.location.origin + "/chat/load").then((res) => {
         <br />
         <div class="footer">
           <p class="author">-${e.author}</p>
-          <a class="replies" href="${window.location.origin + '/replies/?id='+
-              e.id}
+          <a class="replies" href="${
+            window.location.origin + "/replies/?id=" + e.id
+          }
             ">
-            <button>See Replies</button>
+            <button>See Replies ⋅ ${e.replies}</button>
           </a>
         </div>`;
     chatContainer.appendChild(newCard);
