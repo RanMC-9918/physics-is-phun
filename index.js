@@ -307,7 +307,7 @@ async function refreshMessages() {
           } else {
             cardData[i].author = "Anonymous";
           }
-          console.log(cardData[i].reply);
+          //console.log(cardData[i].reply);
           let bracket = /"/g; // regexp to find qoutation marks
           cardData[i].replies =
             cardData[i].reply == null
