@@ -4,6 +4,7 @@ let title = form.getElementById('title');
 let body = form.getElementById('body');
 
 let site = window.location.href;
+console.log(site.substring(site.indexOf("?") + 4));
 
 form.onclick = () => {
     fetch(window.location.origin + '/post-reply-form/' + site.substring(site.indexOf('?')), {

@@ -32,7 +32,7 @@ fetch(window.location.origin + "/chat/load").then((res) => {
             window.location.origin + "/replies/?id=" + e.id
           }
             ">
-            <button>See Replies ⋅ ${e.replies}</button>
+            <button>See Replies ⋅ ${e.reply}</button>
           </a>
         </div>`;
     chatContainer.appendChild(newCard);
@@ -41,6 +41,7 @@ fetch(window.location.origin + "/chat/load").then((res) => {
 });
 
 function formatDate(e) {
+  if(e.posted_at == null || e.posted_at == undefined) return NaN;
   e = e.posted_at.substring(0, e.posted_at.indexOf("T"));
   let year = e.substring(0, e.indexOf("-"));
   e = e.substring(e.indexOf("-") + 1);
