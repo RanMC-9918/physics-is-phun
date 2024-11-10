@@ -15,10 +15,16 @@ fetch(
 ).then((res) => {
   replyContainer.innerHTML = "";
   res.json().then((data) => {
-    //console.log(data);
+    console.log(data);
+    if (data.length == 0) {
+      replyContainer.innerHTML =
+        '<h3 style="text-align: left;margin-left: 20px; margin-top: 20px; font-weight: normal;">No replies found. Maybe you can be the first :)</h3>';
+      return;
+    }
+
     data.forEach((e) => {
       console.log(e);
-      if (e == 0) {
+      if (e == 0 || e == null || e == undefined) {
         replyContainer.innerHTML =
           '<h3 style="text-align: left;margin-left: 20px; font-weight: normal;">No replies found. Maybe you can be the first :)</h3>';
         return;

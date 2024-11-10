@@ -89,7 +89,7 @@ app.get("/question/load", async (req, res) => {
       out.author = "User Not Found";
     }
     out.resolved = out.resolved == undefined ? false : out.resolved;
-    out.title = out.title == undefined ? 'not found' : out.title;
+    out.title = out.title == undefined ? "not found" : out.title;
     res.send(
       JSON.stringify({
         resolved: `${out.resolved}`,
@@ -106,36 +106,36 @@ app.get("/question/load", async (req, res) => {
 app.get("/replies/load", async (req, res) => {
   const id = req.query.id.match(digits).join();
   // console.log(id)
-  let replyIds = await client.query('select reply_ids from apphysics1 where id = ' + id + ' limit 1;');
+  let replyIds = await client.query(
+    "select reply_ids from apphysics1 where id = " + id + " limit 1;"
+  );
   replyIds = replyIds == undefined ? [] : replyIds.rows[0].reply_ids;
 
   console.log(replyIds); //70
   //console.log(cardData + "siodhfgoasdhjgoias;gfjkfd")
 
-
-
   let replies = [];
 
-  let promises = replyIds.map(async (id) => {
-    const reply = await client.query('select * from replies where id ='+ id +' limit 1;');
-    if (reply == undefined) {
-      
-    }
-    else{
-      replies.push({
-        id: reply.rows[0].id,
-        title: reply.rows[0].title,
-        body: reply.rows[0].body,
-        posted_at: reply.rows[0].posted_at,
-        author: reply.rows[0].author
-      });
-    }
-    
-  })
-  
-  
-  await Promise.all(promises);
-  console.log(replies);
+  if (replyIds != null && replyIds != undefined) {
+    let promises = replyIds.map(async (id) => {
+      const reply = await client.query(
+        "select * from replies where id =" + id + " limit 1;"
+      );
+      if (reply == undefined) {
+      } else {
+        replies.push({
+          id: reply.rows[0].id,
+          title: reply.rows[0].title,
+          body: reply.rows[0].body,
+          posted_at: reply.rows[0].posted_at,
+          author: reply.rows[0].author,
+        });
+      }
+    });
+
+    await Promise.all(promises);
+    console.log(replies);
+  }
 
   replies = JSON.stringify(replies);
   //console.log(replies)
@@ -217,13 +217,7 @@ app.post("/add-message-form", (req, res) => {
     INSERT INTO apphysics1 (resolved, title, body, posted_at, author) 
     VALUES ($1, $2, $3, $4, $5, $6)
   `,
-    [
-      false,
-      title,
-      question,
-      formattedDate,
-      author
-    ],
+    [false, title, question, formattedDate, author],
     (err, res) => {
       if (err) {
         console.error(
@@ -252,8 +246,8 @@ app.post("/add-message-form", (req, res) => {
   // }
 });
 
-app.post("/post-reply-form", (req, res) => {
-  let messageId = req.query.id;
+app.post("/post-reply-form", async (req, res) => {
+  let messageId = req.query.id.match(digits).join(); //match only numbers and join array to string
 
   let author = req.body.author;
 
@@ -261,8 +255,28 @@ app.post("/post-reply-form", (req, res) => {
 
   let body = req.body.body;
 
+  let date = new Date;
+
+  let replyId = await client.query(
+    "select id from replies order by id desc limit 1;"
+  );
+
+  if(replyId != undefined || replyId != null){
+    replyId = replyId.rows[0].id + 1;
+    console.log(replyId);
+  }
+  else {
+    replyId = 1;
+    console.log("WARNING: REPLY SYSTEM NOT WORKING")
+  }
+
+  await client.query(`INSERT INTO replies (title, body, posted_at, author, id) VALUES ($1, $2, $3, $4, $5);`
+    , [title, body, date, author, replyId]);
+
+  
+
   client.query(
-    `update apphysics1 set reply = append_array() where id = ${messageId}`
+    `update apphysics1 set reply_ids = array_append(reply_ids, ${replyId}) where id = ${messageId}`
   );
 });
 
@@ -297,7 +311,7 @@ async function getNameFromId(id) {
     "SELECT username FROM accounts WHERE id = $1;",
     [id]
   );
-  return name.rows[0] == undefined ? 'Anonymous' : name.rows[0].username;
+  return name.rows[0] == undefined ? "Anonymous" : name.rows[0].username;
 }
 async function getReplies(id) {
   if (!digits.test(id)) {
@@ -365,14 +379,12 @@ async function refreshMessages() {
           cardData[i].author = "Anonymous";
         }
         //console.log(cardData[i].reply_ids);
-        if(cardData[i].reply_ids){
+        if (cardData[i].reply_ids) {
           console.log(cardData[i].reply_ids);
           cardData[i].reply = cardData[i].reply_ids.length;
-        }
-        else{
+        } else {
           cardData[i].reply = 0;
         }
-        
       }
       console.log("refreshed messages");
       unreadMessages = cardData;
