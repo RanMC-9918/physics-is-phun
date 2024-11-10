@@ -22,6 +22,7 @@ client.connect((err) => {
     console.error("Error connecting to PostgreSQL database", err);
   } else {
     console.log("Connected to PostgreSQL database");
+    console.log("Server started and ready, http://localhost:8080")
   }
 });
 
@@ -235,6 +236,16 @@ app.post('/add-message-form', (req, res) => {
   // }else{
     
   // }
+})
+
+app.post('/post-reply-form', (req, res) => {
+
+  let messageId = req.query.id;
+
+  let author = req.body.author;
+
+  req.body = 
+
 })
 
 app.listen(port);

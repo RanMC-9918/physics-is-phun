@@ -10,10 +10,6 @@
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <script>
-        console.log(sessionStorage.getItem("id"));
-        if (sessionStorage.getItem("id") != null && sessionStorage.getItem("id") != undefined && sessionStorage.getItem("id") != 0){window.location.href = window.location.origin + "/loggedin"};
-    </script>
     <nav class="navbar">
         <div class="logo">
             <a href="../">
@@ -39,7 +35,15 @@
         </ul>
     </nav>
     <div id="mainBody">
-        
+       <form id="replyform">
+        <label for="question">Title:</label>
+        <textarea id="question" name="question" rows="1" cols="50" required></textarea>
+        <label for="body">Reply:</label>
+        <textarea id="body" name="body" rows="4" cols="50" required></textarea>
+        <input type="submit" value="Submit">
+        <p>Note: Only smart people can reply. That means no Rohan.</p>
+       </form> 
     </div>
+    <script src="post-reply.js"></script>
 </body>
 </html>

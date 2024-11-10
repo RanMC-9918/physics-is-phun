@@ -1,3 +1,0 @@
-let button = document.getElementById('reply');
-
-//THIS JS FILE IS NOT LINKED IN THE HTML, THE CODE IN THIS FILE WILL NOT DO ANYTHING

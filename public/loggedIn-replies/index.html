@@ -46,11 +46,17 @@
 
         
     </div>
-    <button class="post" id="reply">
-    <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="45" d="M256 112v288M400 256H112"/></svg>
-    Add
-    </button>
+    <a href="../post-reply" id="postReply">
+        <button class="post" id="replyButton">
+        <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="45" d="M256 112v288M400 256H112"/></svg>
+        Reply
+        </button>
+    </a>
+    
     <script src="../js/loadReplies.js"></script>
     <script src="../js/loadQuestion.js"></script>
+    <script>
+        document.getElementById("postReply").href = "../post-reply/" + window.location.href.substring(window.location.href.indexOf("?"))
+    </script>
 </body>
 </html>

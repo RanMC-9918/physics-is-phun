@@ -102,7 +102,7 @@ button:hover {
 .post {
   position: fixed;
   top: calc(100% - 65px);
-  left: calc(100vw - 135px);
+  right: 20px;
   width: 105px;
   height: 50px;
   border-radius: 10px;
@@ -145,3 +145,25 @@ button:hover {
   fill: none;
 }
 
+#addReplyModal {
+  margin: auto;
+  padding: 50px;
+  border-radius: 20px;
+  background: linear-gradient(to bottom right, blanchedalmond, #bda683)
+}
+
+#addReplyModal form {
+  display: flex;
+  flex-direction: column; 
+  gap: 10px;
+}
+
+#addReplyModal textarea {
+  margin-bottom: 20px;
+  padding: 20px;
+  
+}
+
+label {
+  font-size: 1.5em;
+}

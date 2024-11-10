@@ -1,0 +1,38 @@
+
+form{
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    max-width: 500px;
+    gap: 10px;
+}
+
+textarea {
+    padding: 1em;
+    margin-bottom: 25px;
+}
+
+label{
+    font-size: 1.5em;
+}
+
+#mainBody{
+    padding: 30px;
+}
+
+form input {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 30%;
+    margin:auto;
+}
+
+form p {
+    text-align: center;
+    color: rgb(88, 88, 88);
+}
