@@ -1,0 +1,11 @@
+img {
+    display: block;
+    text-align: center;
+    width: 90%;
+    aspect-ratio: 1 / 1;
+    margin: auto;
+}
+
+body{
+    background: red !important;
+}

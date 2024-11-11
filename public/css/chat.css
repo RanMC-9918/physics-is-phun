@@ -93,7 +93,7 @@ body{
   transition: scale 0.2s;
 }
 
-button:hover {
+.card .replies button:hover {
   background-color: #8881be;
   cursor: pointer;
   scale: 1.1;

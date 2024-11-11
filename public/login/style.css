@@ -24,7 +24,7 @@ input[type="password"] {
     border-radius: 5px;
 }
 
-button {
+form button {
     border: none;
     border-radius: 5px;
     cursor: pointer;

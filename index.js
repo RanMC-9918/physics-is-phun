@@ -134,7 +134,7 @@ app.get("/replies/load", async (req, res) => {
           title: reply.rows[0].title,
           body: reply.rows[0].body,
           posted_at: reply.rows[0].posted_at,
-          author: reply.rows[0].author,
+          author: reply.rows[0].author
         });
       }
     });
@@ -156,7 +156,7 @@ app.post("/login-form", async (req, res) => {
 
   //console.log(validateEmail(email));
   let id = await loginVerification(username, password);
-  if (password.length <= 8 && id != false) {
+  if (password.length <= 8 && id) {
     //send to error page
     res.sendFile(path.join(__dirname, "public", "login", "index_error.html"));
   } else {
@@ -205,7 +205,7 @@ app.post("/signin-form", (req, res) => {
 });
 
 app.post("/add-message-form", (req, res) => {
-  console.log(req.body);
+  //console.log(req.body);
   const title = req.body.title;
   const question = req.body.message;
   const author = req.body.id;
@@ -269,7 +269,7 @@ app.post("/post-reply-form", async (req, res) => {
 
   if(replyId != undefined || replyId != null){
     replyId = replyId.rows[0].id + 1;
-    console.log("message: " + replyId);
+    //console.log("message: " + replyId);
   }
   else {
     replyId = 1;
@@ -285,15 +285,13 @@ app.post("/post-reply-form", async (req, res) => {
     `update apphysics1 set reply_ids = array_append(reply_ids, ${replyId}) where id = ${messageId}`
   );
 
+  refreshMessages();
+
   res.redirect('/');
 });
 
-app.listen(port);
-console.log("Server started on port: " + port);
-
-setInterval(() => {
-  //unreadMessages = client.query("SELECT * FROM apphysics1 ORDER BY likes DESC LIMIT 7");
-}, 5000);
+//404
+app.use((req, res, next) => { res.status(404).sendFile(path.join(__dirname, "public", "404", "index.html"))});
 
 //methords
 
@@ -369,7 +367,7 @@ function checkDuplicateId(id) {
 }
 
 async function refreshMessages() {
-  client.query("SELECT * FROM apphysics1 LIMIT 50", async (err, req) => {
+  client.query("SELECT * FROM apphysics1 order by id desc LIMIT 50", async (err, req) => {
     if (err) {
       console.error(
         "Error fetching unread messages from PostgreSQL database",
@@ -401,3 +399,6 @@ async function refreshMessages() {
 }
 
 setInterval(refreshMessages, 18000000); //5mins 1000 * 60 * 60 * 5
+
+app.listen(port);
+console.log("Server started on port: " + port);

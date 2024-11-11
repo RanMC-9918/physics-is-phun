@@ -5,24 +5,25 @@
 }
 
 form {
-    width: 300px;
+    width: 90%;
+    max-width: 500px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    gap: 5px;
 }
 
 label {
     display: block;
-    margin-bottom: 5px;
+    font-size: 2em;
+    text-align: left;
 }
 
-input[type="text"],
-input[type="password"] {
-    width: 100%;
+textarea {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    margin-bottom: 15px;
 }
 
 button {
@@ -35,8 +36,8 @@ button {
     font-weight: 500;
     font-size: 1.3em;
     border: solid #8881be 2px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     padding: 5px;
+    width: 50%;
+    max-width: 200px;
+    margin: auto;
 }

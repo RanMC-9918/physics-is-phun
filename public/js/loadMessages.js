@@ -14,6 +14,7 @@ fetch(window.location.origin + "/chat/load").then((res) => {
       counter++;
       let newCard = document.createElement('div');
       newCard.classList.add("card");
+      //console.log(e);
       newCard.style = `opacity: 0;animation: fade-in 0.7s ${Math.log(counter*3) / 6}s forwards`; //log as easing function
       newCard.innerHTML = `
         <div class="header">

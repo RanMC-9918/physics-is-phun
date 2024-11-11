@@ -35,7 +35,6 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex: 2;
 }
 
 .navbar ul li {
@@ -52,7 +51,6 @@ body {
 /* RIGHT SIDE OF NAVBAR */
 
 .navbar .logo {
-  flex: 5;
   margin-top: 5px; 
 }
 
@@ -70,7 +68,7 @@ body {
 .navbar a {
     transition: scale 0.2s;
     border-radius: 5px;
-  background-color: var(--tertiary);
+    background-color: var(--tertiary);
 }
 
 .navbar a:not(:has(img)):hover {
@@ -84,4 +82,53 @@ body {
 
 .navbar a:hover #logo-icon{
   translate: 0px 10px;
+}
+
+svg {
+  width: 35px;
+}
+
+#dropdown{
+  background-color: transparent;
+  border: 0px;
+  opacity: 0;
+}
+
+@media (max-width: 700px){
+
+  .navbar ul{
+    position: absolute;
+    top: -300px;
+    right: 10px;
+    transition: top 0.5s 0.1s;
+    gap: 15px;
+    padding: 20px;
+     flex-direction: column;
+     background-color: var(--secondary);
+     box-shadow: 5px 5px 20px #333333aa;
+      border-radius:7px;
+      z-index: 99;
+  }
+
+  .navbar ul li{
+      background-color: var(--tertiary);
+     border-radius: 5px;
+     box-shadow: inset 5px 5px 20px #33333322;
+   }
+
+  #dropdown:focus + *{
+    right: 10px;
+    top: 50px;
+  }
+
+  #dropdown{
+    width: 100%;
+    text-align: right;
+    margin-bottom: 20px;
+    opacity: 1;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 35px;
+  }
 }
