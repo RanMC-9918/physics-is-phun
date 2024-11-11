@@ -32,7 +32,7 @@ fetch(
       replyContainer.innerHTML += `
     <div class="card">
         <div class="header">
-        <h2>Reply</h2>
+        <h2>${e.title}</h2>
         <div class="line"></div>
         <h2 class="date">${formatDate(e.posted_at)}</h2>
         </div>

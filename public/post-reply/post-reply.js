@@ -27,7 +27,7 @@ form.addEventListener('submit', (event) => {
     ).then((response) => {
       window.location.href =
         window.location.origin +
-        "/post-reply/" +
+        "/loggedIn-replies/" +
         site.substring(site.indexOf("?"));
-    });
+  });
 })

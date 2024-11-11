@@ -123,6 +123,12 @@ app.get("/replies/load", async (req, res) => {
       );
       if (reply == undefined) {
       } else {
+        if(reply.rows[0].author == undefined || reply.rows[0].author == null) {
+          reply.rows[0].author = "Anonymous";
+        }
+        else{
+          reply.rows[0].author = await getNameFromId(reply.rows[0].author);
+        }
         replies.push({
           id: reply.rows[0].id,
           title: reply.rows[0].title,
@@ -134,7 +140,7 @@ app.get("/replies/load", async (req, res) => {
     });
 
     await Promise.all(promises);
-    console.log(replies);
+    //console.log(replies);
   }
 
   replies = JSON.stringify(replies);
@@ -263,7 +269,7 @@ app.post("/post-reply-form", async (req, res) => {
 
   if(replyId != undefined || replyId != null){
     replyId = replyId.rows[0].id + 1;
-    console.log(replyId);
+    console.log("message: " + replyId);
   }
   else {
     replyId = 1;
@@ -275,9 +281,11 @@ app.post("/post-reply-form", async (req, res) => {
 
   
 
-  client.query(
+  await client.query(
     `update apphysics1 set reply_ids = array_append(reply_ids, ${replyId}) where id = ${messageId}`
   );
+
+  res.redirect('/');
 });
 
 app.listen(port);
