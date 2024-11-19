@@ -43,15 +43,24 @@
         <script>
             let name = document.getElementById("name");
             console.log(sessionStorage.getItem("id"));
-            if(sessionStorage.getItem("id") && sessionStorage.getItem("id") != undefined) {
-                fetch(window.location.origin + "/name/load?id=" + sessionStorage.getItem("id")).then(res=>{ res.json().then(result => {
-                    name.innerHTML = result.body;
-                    name.style.opacity = "0";
-                    name.style.animation = "fade-in 1s forwards"
-                    console.log(result);
-                });
-                });
+            if(sessionStorage.getItem("username") && sessionStorage.getItem("username") != undefined){
+                name.innerHTML = sessionStorage.getItem("username");
+                name.style.opacity = "0";
+                name.style.animation = "fade-in 1s forwards"
             }
+            else{
+                if(sessionStorage.getItem("id") && sessionStorage.getItem("id") != undefined) {
+                    fetch(window.location.origin + "/name/load?id=" + sessionStorage.getItem("id")).then(res=>{ res.json().then(result => {
+                        sessionStorage.setItem("username", result.body);
+                        name.innerHTML = result.body;
+                        name.style.opacity = "0";
+                        name.style.animation = "fade-in 1s forwards"
+                        console.log(result);
+                    });
+                    });
+                }
+            }
+            
         </script>
     </div>
 </body>

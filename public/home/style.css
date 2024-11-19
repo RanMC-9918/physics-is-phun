@@ -1,0 +1,35 @@
+*{
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+.hero{
+    font-size: 2em;
+    margin: 30px 0;
+    padding: 20px;
+}
+
+.special{
+    color: rebeccapurple; 
+    cursor: text;
+    z-index: 5;
+}
+
+.letter{
+    position: relative;
+    top: 0px;
+    margin: 0 -0.1em;
+    transition: top 0.3s ease;
+}
+
+.avoidFallingLetters {
+    margin-top: 20px;
+    transition: all 0.3s ease;
+    color: #444;
+}
+
+h1:has(#fallTrigger:hover) + .avoidFallingLetters{
+    margin-top: 50px;
+    filter: opacity(0.6);
+}
