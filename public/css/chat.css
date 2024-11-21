@@ -1,6 +1,6 @@
 #mainBody {
   text-align: left;
-  padding: 10px;
+  padding: 30px;
   width: 100%;
 }
 
@@ -22,7 +22,7 @@ body{
 
 .card {
   margin: 10px;
-  padding: 20px;
+  padding: 30px;
   border: 3px outset #ca676752;
   border-radius: 10px;
   background-color: rgb(240, 214, 180);
@@ -43,6 +43,7 @@ body{
 .card .header h1 {
   font-weight: bold;
   font-size: 2em;
+  text-align: left;
 }
 
 .card .header .line {
@@ -62,6 +63,8 @@ body{
 
 .card .body p {
   word-wrap: normal;
+  line-height: 2em;
+  margin: 20px 0;
 }
 
 .card .date {
