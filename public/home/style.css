@@ -4,6 +4,10 @@
     margin: 0;
 }
 
+#mainBody{
+    padding: 0;
+}
+
 html{
     width: 100vw;
     overflow-x: hidden;
