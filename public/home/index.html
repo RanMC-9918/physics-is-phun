@@ -64,7 +64,7 @@
             </h1>
             <h4 class="avoidFallingLetters"> A site where you can learn <strong>and</strong> teach Physics for free</h4>
             <script defer src="../home/fallLetters.js" type="text/javascript"></script>
-            <button class="callToAction">Ask A Question</button>
+            <a href="../signin/"><button class="callToAction">Ask A Question</button></a>
         </header>
 
         <main>
@@ -88,9 +88,9 @@
             </ul>
         </main>
 
-        <section>
+        <section class="cardshowcase" id="js-cardContainer">
             <h1>Question:</h1>
-            <div class="card" style="opacity: 0; animation: 0.7s ease 0.549306s 1 normal forwards running fade-in;">
+            <div class="card">
                 <div class="header">
                     <h2>How can I get involved?</h2>
                     <div class="line"></div>
@@ -103,14 +103,14 @@
                 <br>
                 <div class="footer">
                     <p class="author">-rohan</p>
-                    <a class="replies" href="http://localhost:8080/replies/?id=63
+                    <a class="replies" href="../replies/?id=63
                         ">
                         <button>See Replies ⋅ 0</button>
                     </a>
                 </div>
             </div>
             <h1>Answer:</h1>
-            <div class="card" style="opacity: 0; animation: 0.7s ease 0.549306s 1 normal forwards running fade-in;">
+            <div class="card">
                 <div class="header">
                     <h2>Easy !</h2>
                     <div class="line"></div>
@@ -126,12 +126,27 @@
                 <br>
                 <div class="footer">
                     <p class="author">-rohan</p>
-                    <a class="replies" href="http://localhost:8080/replies/?id=63
+                    <a class="replies" href="../replies/?id=63
                         ">
                         <button>See Replies ⋅ 0</button>
                     </a>
                 </div>
             </div>
+            <script type="text/javascript">
+
+                let cardContainer = document.getElementById("js-cardContainer");
+
+                document.addEventListener("scroll", () => {
+                    document.body.style.setProperty("--scroll", (window.pageYOffset - cardContainer.offsetTop + window.innerHeight/2) / cardContainer.offsetHeight);
+                });
+            </script>
+        </section>
+
+
+        <section>
+            <h1>Lerem</h1>
+            <h2>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officiis quae omnis vero voluptatum dignissimos voluptatem aspernatur numquam at harum quos, corporis consequatur id possimus. Dignissimos accusamus voluptatibus tenetur nisi veniam?</h2>
+            <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
         </section>
         
         
