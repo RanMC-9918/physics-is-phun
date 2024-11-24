@@ -21,7 +21,6 @@ client.connect((err) => {
     console.error("Error connecting to PostgreSQL database", err);
   } else {
     console.log("Connected to PostgreSQL database");
-    console.log("Server started and ready, http://localhost:8080");
   }
 });
 
@@ -35,8 +34,6 @@ client.connect((err) => {
 //     }
 //   }
 // )
-
-refreshMessages();
 
 const app = express();
 
@@ -52,7 +49,7 @@ const port = process.env.PORT || 8080;
 
 app.use((req, res, next) => {
   if (debugMode) {
-    console.log(`${req.method} request to ${req.url}`);
+    console.log(`${req.method} request to ${req.url}`); 
   }
 
   next();
@@ -64,7 +61,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", async (req, res) => {
   if (await authenticateUser(req)) {
-    res.render(path.join("home", "index"), { isSignedIn: true });
+    res.redirect("/dashboard");
   } else {
     res.render(path.join("home", "index"), { isSignedIn: false });
   }
@@ -79,10 +76,19 @@ app.get("/chat", async (req, res) => {
 });
 
 app.get("/account", async (req, res) => {
-  if (await authenticateUser(req)) {
-    res.render(path.join("account", "index"), { isSignedIn: true });
+
+  let id = parseCookies(req.headers.cookie).userid
+
+  if (await authenticateUser(id)) {
+    let info = await getAccountInfo(id);
+    res.render(path.join("account", "index"), { isSignedIn: true, username: info.username, email: info.email, password: info.pass });
   } else {
-    res.render(path.join("account", "index"), { isSignedIn: false });
+    res.render(path.join("account", "index"), {
+      isSignedIn: false,
+      username: "You dont exist?",
+      email: "You dont exist?",
+      password: "You dont exist?",
+    });
   }
 });
 
@@ -95,8 +101,10 @@ app.get("/donate", async (req, res) => {
 });
 
 app.get("/dashboard", async (req, res) => {
+
+  let id = parseCookies(req.headers.cookie).userid;
   if (await authenticateUser(req)) {
-    res.render(path.join("dashboard", "index"), { isSignedIn: true });
+    res.render(path.join("dashboard", "index"), { isSignedIn: true, username: await getNameFromId(id) });
   } else {
     res.render(path.join("dashboard", "index"), { isSignedIn: false });
   }
@@ -104,7 +112,18 @@ app.get("/dashboard", async (req, res) => {
 
 app.get("/questions", async (req, res) => {
   if (await authenticateUser(req)) {
-    res.render(path.join("questions", "index"), { isSignedIn: true });
+    let question = await getQuestion(req.query.id);
+    question.author = "- " + await getNameFromId(question.author);
+
+    let replies = await getReplies(req.query.id);
+
+    console.log(replies);
+
+    res.render(path.join("questions", "index"), {
+      isSignedIn: true,
+      question,
+      replies,
+    });
   } else {
     res.render(path.join("questions", "index"), { isSignedIn: false });
   }
@@ -118,7 +137,50 @@ app.get("/chat", async (req, res) => {
   }
 });
 
+app.get("/login", async (req, res) => {
+  if (await authenticateUser(req)) {
+    res.render(path.join("login", "index"), {
+      isSignedIn: true,
+      errorMessage: "",
+    });
+  } else {
+    res.render(path.join("login", "index"), {
+      isSignedIn: false,
+      errorMessage: "",
+    });
+  }
+});
+
+app.get("/signup", async (req, res) => {
+  if (await authenticateUser(req)) {
+    res.render(path.join("signup", "index"), {
+      isSignedIn: true,
+      errorMessage: "",
+    });
+  } else {
+    res.render(path.join("signup", "index"), {
+      isSignedIn: false,
+      errorMessage: "",
+    });
+  }
+});
+
+app.get("/post-reply", async (req, res) => {
+  if (await authenticateUser(req)) {
+    res.render(path.join("post-reply", "index"), {
+      isSignedIn: true,
+      errorMessage: "",
+    });
+  } else {
+    res.render(path.join("post-reply", "index"), {
+      isSignedIn: false,
+      errorMessage: "",
+    });
+  }
+});
+
 // EXPRESS API REQUESTS -------------------------------------------------------------------
+// these requests are depreciated, in favor of the server-side rendering (from ejs)
 
 app.get("/name/load", async (req, res) => {
   let id = req.query.id;
@@ -134,6 +196,7 @@ app.get("/favicon.ico", (req, res) => {
 app.get("/chat/load", (req, res) => {
   res.send(unreadMessages);
 });
+
 app.get("/question/load", async (req, res) => {
   const id = req.query.id.match(digits).join();
   let out = await getQuestion(id);
@@ -212,10 +275,19 @@ app.post("/login-form", async (req, res) => {
 
   //console.log(validateEmail(email));
   let id = await loginVerification(username, password);
-  if (password.length <= 8 && id) {
+  if (password.length <= 8) {
     //send to error page
-    res.sendFile(path.join(__dirname, "public", "login", "index_error.html"));
+    res.render(path.join("login", "index"), {
+      isSignedIn: false,
+      errorMessage: "Your password needs to be at least 8 characters",
+    });
+  } else if (!id) {
+    res.render(path.join("login", "index"), {
+      isSignedIn: false,
+      errorMessage: "Please check your username and password",
+    });
   } else {
+    res.header("set-cookie", `userid=${id}`);
     res.send(
       `<body><script> sessionStorage.setItem("id", ${id}); window.location.href = window.location.origin;</script></body>`
     );
@@ -311,13 +383,15 @@ app.post("/add-message-form", (req, res) => {
 app.post("/post-reply-form", async (req, res) => {
   let messageId = req.query.id.match(digits).join(); //match only numbers and join array to string
 
-  let author = req.body.author;
+  let author = parseCookies(req.headers.cookie).userid;
 
   let title = req.body.title;
 
   let body = req.body.body;
 
   let date = new Date();
+
+  let username = await getNameFromId(author);
 
   let replyId = await client.query(
     "select id from replies order by id desc limit 1;"
@@ -332,13 +406,15 @@ app.post("/post-reply-form", async (req, res) => {
   }
 
   await client.query(
-    `INSERT INTO replies (title, body, posted_at, author, id) VALUES ($1, $2, $3, $4, $5);`,
-    [title, body, date, author, replyId]
+    `INSERT INTO replies (title, body, posted_at, author, id, username) VALUES ($1, $2, $3, $4, $5, $6);`,
+    [title, body, date, author, replyId, username]
   );
 
   await client.query(
     `update apphysics1 set reply_ids = array_append(reply_ids, ${replyId}) where id = ${messageId}`
   );
+
+  console.log("reply added: " + title + " by " + getNameFromId(author));
 
   refreshMessages();
 
@@ -373,6 +449,7 @@ async function loginVerification(username, password) {
     );
   });
 }
+
 async function getNameFromId(id) {
   let name = await client.query(
     "SELECT username FROM accounts WHERE id = $1;",
@@ -381,14 +458,33 @@ async function getNameFromId(id) {
   return name.rows[0] == undefined ? "Anonymous" : name.rows[0].username;
 }
 async function getReplies(id) {
-  if (!digits.test(id)) {
-    console.log("ID INVALID");
-    return [];
+  let replyIds = await client.query(
+    "select reply_ids from apphysics1 where id = " + id + " limit 1;"
+  );
+  replyIds = replyIds == undefined ? [] : replyIds.rows[0].reply_ids;
+
+  let replies = [];
+
+  if (replyIds != null && replyIds != undefined) {
+    let promises = replyIds.map(async (id) => {
+      const reply = await client.query(
+        "select * from replies where id =" + id + " limit 1;"
+      );
+
+      replies.push({
+        id: reply.rows[0].id,
+        title: reply.rows[0].title,
+        body: reply.rows[0].body,
+        posted_at: reply.rows[0].posted_at,
+        author: "- " + reply.rows[0].username,
+      });
+    });
+
+    await Promise.all(promises);
+
+    return replies;
   } else {
-    const res = await client.query(
-      "SELECT reply FROM apphysics1 WHERE id = " + id + ";"
-    );
-    return res.rows;
+    return [];
   }
 }
 async function getQuestion(id) {
@@ -414,6 +510,8 @@ function generate10DigitRandomNumber() {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+
+
 function checkDuplicateId(id) {
   client.query(`SELECT * FROM accounts WHERE id = ${id}`, (err, result) => {
     if (err) {
@@ -425,6 +523,13 @@ function checkDuplicateId(id) {
       return false;
     }
   });
+}
+
+async function getAccountInfo(id) {
+  const result = await client.query("SELECT * FROM accounts WHERE id = $1;", [
+    id
+  ]);
+  return result.rows[0];
 }
 
 async function refreshMessages() {
@@ -463,13 +568,29 @@ async function refreshMessages() {
 }
 
 async function authenticateUser(req) {
-  if (req.headers.cookie) {
+  if (req) {
     return true;
   }
   return false;
 }
 
-setInterval(refreshMessages, 18000000); //5mins 1000 * 60 * 60 * 5
+function parseCookies(cookies) {
+  let ans = {};
+  if (cookies) {
+    cookies.split(";").forEach((pair) => {
+      let key = pair.split("=")[0];
+      let value = pair.split("=")[1];
+      key.trim();
+      value.trim();
+      ans[key] = value;
+    });
+  }
+  return ans;
+}
 
-app.listen(port);
-console.log("Server started on port: " + port);
+app.listen(port, () => {
+  console.log("Server started on port: " + port);
+  refreshMessages();
+  setInterval(refreshMessages, 18000000); //5mins = 1000 * 60 * 60 * 5
+  console.log("Service ready!, local server link: http://localhost:" + port);
+});

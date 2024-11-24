@@ -20,11 +20,52 @@
     <div id="mainBody">
         <h1>Question</h1>
         <div id="question">
-            
+            <div class="card">
+                <div class="header">
+                <h2><%= question.title %></h2>
+                <div class="line"></div>
+                    <% if(question.posted_at) {
+                        question.posted_at = question.posted_at.toLocaleDateString();
+                    } 
+                    else {
+                        question.posted_at = 'Timeless';
+                        }; %>
+                    <h2 class="date"><%= question.posted_at %></h2>
+                </div>
+                <br/>
+                <div class="body">
+                    <p><%= question.body %></p>
+                </div>
+                <br />
+                <div class="footer">
+                    <p class="author"><%= question.author%></p>
+                </div>
+            </div>
         </div>
         <h2>Replies</h2>
         <div id="replyContainer">
-            
+            <% if(replies.length == 0) { %>
+                <p>No replies yet. Be the first :)</p>
+            <% } else { %>
+                <% replies.forEach(reply => { %>
+                    <div class="card">
+                        <div class="header">
+                        <h2><%= reply.title %></h2>
+                        <div class="line"></div>
+                            <% if(reply.posted_at) {reply.posted_at = reply.posted_at.toLocaleDateString();} else {reply.posted_at = "Timeless";} %>
+                            <h2 class="date"><%= reply.posted_at%></h2>
+                        </div>
+                        <br/>
+                        <div class="body">
+                            <p><%= reply.body %></p>
+                        </div>
+                        <br />
+                        <div class="footer">
+                            <p class="author"><%= reply.author%></p>
+                        </div>
+                    </div>
+                <% }) %>
+            <% } %>
         </div>
 
         
@@ -36,8 +77,6 @@
         </button>
     </a>
     
-    <script src="../js/loadReplies.js"></script>
-    <script src="../js/loadQuestion.js"></script>
     <script>
         document.getElementById("postReply").href = "../post-reply/" + window.location.href.substring(window.location.href.indexOf("?"))
     </script>

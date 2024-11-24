@@ -27,7 +27,7 @@ form.addEventListener('submit', (event) => {
     ).then((response) => {
       window.location.href =
         window.location.origin +
-        "/loggedIn-replies/" +
+        "/questions/" +
         site.substring(site.indexOf("?"));
   });
 })

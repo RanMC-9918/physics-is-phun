@@ -4,11 +4,22 @@
 
 @keyframes fade-in {
     0% {
-        opacity: 0;
+        opacity: 0.2;
         scale: 0.7;
+        transform: translateX(-50px);
     }
     100% {
         opacity: 1;
         scale: 1;
+        transform: translateX(0);
     }
+}
+
+h1{
+    display:block;
+    text-align: center;
+}
+
+#name{
+    animation: fade-in 1s forwards;
 }

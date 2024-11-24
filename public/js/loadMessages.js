@@ -30,7 +30,7 @@ fetch(window.location.origin + "/chat/load").then((res) => {
         <div class="footer">
           <p class="author">-${e.author}</p>
           <a class="replies" href="${
-            window.location.origin + "/replies/?id=" + e.id
+            window.location.origin + "/questions/?id=" + e.id
           }
             ">
             <button>See Replies ⋅ ${e.reply}</button>

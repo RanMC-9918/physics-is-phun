@@ -17,11 +17,20 @@
     <% } %>
     
     <div class="mainBody">
-        <h1 id="21309">Profile Information: </h1>
-        <h3 id="03429">Name: </h3>
-        <h3 id="43092">Email address: </h3>
-        <h3 id="43902">Password: </h3>
-        <button onclick="console.log(`${id} logged out`);sessionStorage.setItem('id', 0);window.location.href = window.location.origin + '/';">Logout</button>
+        <div class="info">
+            <center><h1 id="21309">Profile Information: </h1></center>
+            <h3 id="03429">Name: <h3 class="content"><%= username %></h3></h3>
+            <h3 id="43092">Email address: <h3 class="content"><%= email %></h3></h3>
+            <h3 id="43902">Password: <h3 class="content"><%= password %></h3></h3>
+            <center><button onclick="
+            sessionStorage.setItem('id', 0);
+            document.cookie = 'userid=0;expires=Thu, 01 Jan 1990 00:00:00 UTC;path=/;'; //delete userid cookie
+            console.log(document.cookie);
+            window.location.href = window.location.origin
+            ">Logout</button></center>
+            
+        </div>
+        
     </div>
 </body>
 </html>
