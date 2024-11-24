@@ -10,31 +10,13 @@
     <link rel="stylesheet" href="../css/chat.css" />
 </head>
 <body>
-    <nav class="navbar">
-        <div class="logo">
-            <a href="../">
-                    <img id="logo-icon" src="../images/icon.png" alt="Logo of Physics Phun" />
-                    <img id="logo-text" src="../images/noicon.png" alt="Logo of Physics Phun" />
-            </a>
-        </div>
+    
+    <% if(isSignedIn) { %>
+        <%- include("../partials/navLoggedIn") %>
+    <% } else { %>
+        <%- include("../partials/nav") %>
+    <% } %>
 
-        <button id="dropdown">
-            <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M80 160h352M80 256h352M80 352h352"/></svg>
-        </button>
-        
-        <ul>
-            <a href="../account">
-                <li class="nav-items">Account</li>
-            </a>
-            <a href="../chat">
-                <li class="nav-items">Chat</li>
-            </a>
-
-            <a href="../donate">
-                <li class="nav-items">Donate</li>
-            </a>
-        </ul>
-    </nav>
     <div id="mainBody">
         <h1>Question</h1>
         <div id="question">

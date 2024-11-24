@@ -39,8 +39,13 @@ client.connect((err) => {
 refreshMessages();
 
 const app = express();
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "public"));
+
 const port = process.env.PORT || 8080;
 
 // EXPRESS JS MIDDLEWARE ------------------------------------------------------------------
@@ -57,13 +62,63 @@ app.use(express.static(path.join(__dirname, "public")));
 
 //EXPRES JS GET REQUESTS ------------------------------------------------------------------------
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "home", "index.html"));
+app.get("/", async (req, res) => {
+  if (await authenticateUser(req)) {
+    res.render(path.join("home", "index"), { isSignedIn: true });
+  } else {
+    res.render(path.join("home", "index"), { isSignedIn: false });
+  }
 });
 
-app.get("/loggedin", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "loggedin", "index.html"));
+app.get("/chat", async (req, res) => {
+  if (await authenticateUser(req)) {
+    res.render(path.join("chat", "index"), { isSignedIn: true });
+  } else {
+    res.render(path.join("chat", "index"), { isSignedIn: false });
+  }
 });
+
+app.get("/account", async (req, res) => {
+  if (await authenticateUser(req)) {
+    res.render(path.join("account", "index"), { isSignedIn: true });
+  } else {
+    res.render(path.join("account", "index"), { isSignedIn: false });
+  }
+});
+
+app.get("/donate", async (req, res) => {
+  if (await authenticateUser(req)) {
+    res.render(path.join("donate", "index"), { isSignedIn: true });
+  } else {
+    res.render(path.join("donate", "index"), { isSignedIn: false });
+  }
+});
+
+app.get("/dashboard", async (req, res) => {
+  if (await authenticateUser(req)) {
+    res.render(path.join("dashboard", "index"), { isSignedIn: true });
+  } else {
+    res.render(path.join("dashboard", "index"), { isSignedIn: false });
+  }
+});
+
+app.get("/questions", async (req, res) => {
+  if (await authenticateUser(req)) {
+    res.render(path.join("questions", "index"), { isSignedIn: true });
+  } else {
+    res.render(path.join("questions", "index"), { isSignedIn: false });
+  }
+});
+
+app.get("/chat", async (req, res) => {
+  if (await authenticateUser(req)) {
+    res.render(path.join("chat", "index"), { isSignedIn: true });
+  } else {
+    res.render(path.join("chat", "index"), { isSignedIn: false });
+  }
+});
+
+// EXPRESS API REQUESTS -------------------------------------------------------------------
 
 app.get("/name/load", async (req, res) => {
   let id = req.query.id;
@@ -123,10 +178,9 @@ app.get("/replies/load", async (req, res) => {
       );
       if (reply == undefined) {
       } else {
-        if(reply.rows[0].author == undefined || reply.rows[0].author == null) {
+        if (reply.rows[0].author == undefined || reply.rows[0].author == null) {
           reply.rows[0].author = "Anonymous";
-        }
-        else{
+        } else {
           reply.rows[0].author = await getNameFromId(reply.rows[0].author);
         }
         replies.push({
@@ -134,7 +188,7 @@ app.get("/replies/load", async (req, res) => {
           title: reply.rows[0].title,
           body: reply.rows[0].body,
           posted_at: reply.rows[0].posted_at,
-          author: reply.rows[0].author
+          author: reply.rows[0].author,
         });
       }
     });
@@ -147,6 +201,8 @@ app.get("/replies/load", async (req, res) => {
   //console.log(replies)
   res.send(replies);
 });
+
+//EXPRESS POST REQ -------------------------------------------------------------------
 
 app.post("/login-form", async (req, res) => {
   const username = req.body.username;
@@ -261,25 +317,24 @@ app.post("/post-reply-form", async (req, res) => {
 
   let body = req.body.body;
 
-  let date = new Date;
+  let date = new Date();
 
   let replyId = await client.query(
     "select id from replies order by id desc limit 1;"
   );
 
-  if(replyId != undefined || replyId != null){
+  if (replyId != undefined || replyId != null) {
     replyId = replyId.rows[0].id + 1;
     //console.log("message: " + replyId);
-  }
-  else {
+  } else {
     replyId = 1;
-    console.log("WARNING: REPLY SYSTEM NOT WORKING")
+    console.log("WARNING: REPLY SYSTEM NOT WORKING");
   }
 
-  await client.query(`INSERT INTO replies (title, body, posted_at, author, id) VALUES ($1, $2, $3, $4, $5);`
-    , [title, body, date, author, replyId]);
-
-  
+  await client.query(
+    `INSERT INTO replies (title, body, posted_at, author, id) VALUES ($1, $2, $3, $4, $5);`,
+    [title, body, date, author, replyId]
+  );
 
   await client.query(
     `update apphysics1 set reply_ids = array_append(reply_ids, ${replyId}) where id = ${messageId}`
@@ -287,13 +342,19 @@ app.post("/post-reply-form", async (req, res) => {
 
   refreshMessages();
 
-  res.redirect('/');
+  res.redirect("/");
 });
 
-//404
-app.use((req, res, next) => { res.status(404).sendFile(path.join(__dirname, "public", "404", "index.html"))});
+//404 PAGE MIDDLEWARE
+app.use(async (req, res) => {
+  if (await authenticateUser(req)) {
+    res.render(path.join("404", "index"), { isSignedIn: true });
+  } else {
+    res.render(path.join("404", "index"), { isSignedIn: false });
+  }
+});
 
-//methords
+//SERVER PROCCESING FUNCTIONS
 
 async function loginVerification(username, password) {
   return new Promise((resolve, reject) => {
@@ -367,35 +428,45 @@ function checkDuplicateId(id) {
 }
 
 async function refreshMessages() {
-  client.query("SELECT * FROM apphysics1 order by id desc LIMIT 50", async (err, req) => {
-    if (err) {
-      console.error(
-        "Error fetching unread messages from PostgreSQL database",
-        err
-      );
-    } else {
-      let cardData = req.rows;
-      for (let i = 0; i < cardData.length; i++) {
-        // console.log(cardData[i].author);
-        if (cardData[i].author != null) {
-          await getNameFromId(cardData[i].author).then((name) => {
-            cardData[i].author = name;
-          });
-        } else {
-          cardData[i].author = "Anonymous";
+  client.query(
+    "SELECT * FROM apphysics1 order by id desc LIMIT 50",
+    async (err, req) => {
+      if (err) {
+        console.error(
+          "Error fetching unread messages from PostgreSQL database",
+          err
+        );
+      } else {
+        let cardData = req.rows;
+        for (let i = 0; i < cardData.length; i++) {
+          // console.log(cardData[i].author);
+          if (cardData[i].author != null) {
+            await getNameFromId(cardData[i].author).then((name) => {
+              cardData[i].author = name;
+            });
+          } else {
+            cardData[i].author = "Anonymous";
+          }
+          //console.log(cardData[i].reply_ids);
+          if (cardData[i].reply_ids) {
+            console.log(cardData[i].reply_ids);
+            cardData[i].reply = cardData[i].reply_ids.length;
+          } else {
+            cardData[i].reply = 0;
+          }
         }
-        //console.log(cardData[i].reply_ids);
-        if (cardData[i].reply_ids) {
-          console.log(cardData[i].reply_ids);
-          cardData[i].reply = cardData[i].reply_ids.length;
-        } else {
-          cardData[i].reply = 0;
-        }
+        console.log("refreshed messages");
+        unreadMessages = cardData;
       }
-      console.log("refreshed messages");
-      unreadMessages = cardData;
     }
-  });
+  );
+}
+
+async function authenticateUser(req) {
+  if (req.headers.cookie) {
+    return true;
+  }
+  return false;
 }
 
 setInterval(refreshMessages, 18000000); //5mins 1000 * 60 * 60 * 5

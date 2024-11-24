@@ -11,36 +11,13 @@
     <link rel="stylesheet" href="../home/style.css" />
 </head>
 <body>
-    <script>
-        console.log(sessionStorage.getItem("id"));
-        if (sessionStorage.getItem("id") != null && sessionStorage.getItem("id") != undefined && sessionStorage.getItem("id") != 0){window.location.href = window.location.origin + "/loggedin"};
-    </script>
-    <nav class="navbar">
-        <div class="logo">
-            <a href="../">
-                    <img id="logo-icon" src="../images/icon.png" alt="Logo of Physics Phun" />
-                    <img id="logo-text" src="../images/noicon.png" alt="Logo of Physics Phun" />
-            </a>
-        </div>
-        <button id="dropdown">
-            <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-miterlimit="10" stroke-width="32" d="M80 160h352M80 256h352M80 352h352"/></svg>
-        </button>
-        <ul>
-            <a href="../login">
-                <li class="nav-items">Login</li>
-            </a>
-            <a href="../signin">
-                <li class="nav-items">Signin</li>
-            </a>
-            <a href="../chat">
-                <li class="nav-items">Chat</li>
-            </a>
 
-            <a href="../donate">
-                <li class="nav-items">Donate</li>
-            </a>
-        </ul>
-    </nav>
+    <% if(isSignedIn) { %>
+        <%- include("../partials/navLoggedIn") %>
+    <% } else { %>
+        <%- include("../partials/nav") %>
+    <% } %>
+    
     <div id="mainBody">
         <header class="hero">
             <h1 aria-label="Physics is fun">Welcome to our site
@@ -62,7 +39,7 @@
                 <span class="letter">u</span>
                 <span class="letter">n</span>
             </h1>
-            <h4 class="avoidFallingLetters"> A site where you can learn <strong>and</strong> teach Physics for free</h4>
+            <h4 class="avoidFallingLetters"> A site where you can <strong>learn and teach Physics for free</strong></h4>
             <script defer src="../home/fallLetters.js" type="text/javascript"></script>
             <a href="../signin/"><button class="callToAction">Ask A Question</button></a>
         </header>

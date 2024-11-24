@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Physics - Chat</title>
+    <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+    <link rel="stylesheet" href="../css/navbar.css" />
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/chat.css" />
+    <link rel="stylesheet" href="../chat/style.css" />
+  </head>
+  <body>
+    
+    <% if(isSignedIn) { %>
+        <%- include("../partials/navLoggedIn") %>
+    <% } else { %>
+        <%- include("../partials/nav") %>
+    <% } %>
+
+    <h1 class="page-header">Physics Help Room</h1>
+    <div id="mainBody">
+      <div id="chat-container">
+        <script type="text/javascript" src="../js/loadMessages.js"></script>
+      </div>
+    </div>
+    <!-- <a href="../add-message">
+      <button class="post">
+        <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="45" d="M256 112v288M400 256H112"/></svg>
+        Add
+      </button>
+    </a> -->
+  </body>
+</html>

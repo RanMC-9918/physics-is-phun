@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phun Physics</title>
+    <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+    <link rel="stylesheet" href="../css/navbar.css" />
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <% if(isSignedIn) { %>
+        <%- include("../partials/navLoggedIn") %>
+    <% } else { %>
+        <%- include("../partials/nav") %>
+    <% } %>
+    
+    <div class="mainBody">
+        <h1 id="21309">Profile Information: </h1>
+        <h3 id="03429">Name: </h3>
+        <h3 id="43092">Email address: </h3>
+        <h3 id="43902">Password: </h3>
+        <button onclick="console.log(`${id} logged out`);sessionStorage.setItem('id', 0);window.location.href = window.location.origin + '/';">Logout</button>
+    </div>
+</body>
+</html>

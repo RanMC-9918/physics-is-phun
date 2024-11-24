@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phun Physics</title>
+    <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+    <link rel="stylesheet" href="../css/navbar.css" />
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../css/chat.css" />
+</head>
+<body>
+    
+    <% if(isSignedIn) { %>
+        <%- include("../partials/navLoggedIn") %>
+    <% } else { %>
+        <%- include("../partials/nav") %>
+    <% } %>
+    
+    <div id="mainBody">
+        <h1>Question</h1>
+        <div id="question">
+            
+        </div>
+        <h2>Replies</h2>
+        <div id="replyContainer">
+            
+        </div>
+    </div>
+    <script src="../js/loadReplies.js"></script>
+    <script src="../js/loadQuestion.js"></script>
+</body>
+</html>
