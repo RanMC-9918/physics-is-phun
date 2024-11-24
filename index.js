@@ -60,7 +60,8 @@ app.use(express.static(path.join(__dirname, "public")));
 //EXPRES JS GET REQUESTS ------------------------------------------------------------------------
 
 app.get("/", async (req, res) => {
-  if (await authenticateUser(req)) {
+  let id = parseCookies(req.header.cookie).userid;
+  if (await authenticateUser(id)) {
     res.redirect("/dashboard");
   } else {
     res.render(path.join("home", "index"), { isSignedIn: false });
@@ -103,10 +104,10 @@ app.get("/donate", async (req, res) => {
 app.get("/dashboard", async (req, res) => {
 
   let id = parseCookies(req.headers.cookie).userid;
-  if (await authenticateUser(req)) {
+  if (await authenticateUser(id)) {
     res.render(path.join("dashboard", "index"), { isSignedIn: true, username: await getNameFromId(id) });
   } else {
-    res.render(path.join("dashboard", "index"), { isSignedIn: false });
+    res.redirect("/");
   }
 });
 
@@ -383,7 +384,7 @@ app.post("/add-message-form", (req, res) => {
 app.post("/post-reply-form", async (req, res) => {
   let messageId = req.query.id.match(digits).join(); //match only numbers and join array to string
 
-  let author = parseCookies(req.headers.cookie).userid;
+  let author = parseCookies(req.headers.cookie).userid
 
   let title = req.body.title;
 
@@ -568,6 +569,7 @@ async function refreshMessages() {
 }
 
 async function authenticateUser(req) {
+  console.log(req);
   if (req) {
     return true;
   }
