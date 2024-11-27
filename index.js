@@ -3,6 +3,9 @@ const fs = require("fs");
 const path = require("path");
 const { Pool } = require("pg");
 const bodyParser = require("body-parser");
+require("dotenv").config();
+
+console.log("The DBURL you provided is " + process.env.DBURL);
 
 let digits = /[0-9]*/;
 
@@ -13,7 +16,7 @@ const debugMode = false;
 
 const client = new Pool({
   connectionString:
-    "postgresql://admin:hA21G16w37ZYcQisAFcpSrbpdAfQGKLa@dpg-csk6578gph6c73a6vfjg-a.oregon-postgres.render.com/physicsdb?ssl=true",
+    process.env.DBURL,
 });
 
 client.connect((err) => {
@@ -21,6 +24,7 @@ client.connect((err) => {
     console.error("Error connecting to PostgreSQL database", err);
   } else {
     console.log("Connected to PostgreSQL database");
+    refreshMessages();
   }
 });
 
@@ -549,13 +553,12 @@ async function refreshMessages() {
           }
           //console.log(cardData[i].reply_ids);
           if (cardData[i].reply_ids) {
-            console.log(cardData[i].reply_ids);
             cardData[i].reply = cardData[i].reply_ids.length;
           } else {
             cardData[i].reply = 0;
           }
         }
-        console.log("refreshed messages");
+        console.log("The main chat messages have been refreshed.");
         unreadMessages = cardData;
       }
     }
@@ -586,7 +589,6 @@ function parseCookies(cookies) {
 
 app.listen(port, () => {
   console.log("Server started on port: " + port);
-  refreshMessages();
   setInterval(refreshMessages, 18000000); //5mins = 1000 * 60 * 60 * 5
   console.log("Service ready!, local server link: http://localhost:" + port);
 });
