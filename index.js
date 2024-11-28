@@ -110,22 +110,18 @@ app.get("/dashboard", async (req, res) => {
 });
 
 app.get("/questions", async (req, res) => {
-  if (await authenticateUser(req)) {
-    let question = await getQuestion(req.query.id);
-    question.author = "- " + await getNameFromId(question.author);
+  let question = await getQuestion(req.query.id);
+  question.author = "- " + await getNameFromId(question.author);
 
-    let replies = await getReplies(req.query.id);
+  let replies = await getReplies(req.query.id);
 
-    console.log(replies);
+  console.log(replies);
 
-    res.render(path.join("questions", "index"), {
-      isSignedIn: true,
-      question,
-      replies,
-    });
-  } else {
-    res.render(path.join("questions", "index"), { isSignedIn: false });
-  }
+  res.render(path.join("questions", "index"), {
+    isSignedIn: await authenticateUser(req),
+    question,
+    replies,
+  });
 });
 
 app.get("/chat", async (req, res) => {
@@ -151,16 +147,14 @@ app.get("/login", async (req, res) => {
 });
 
 app.get("/signup", async (req, res) => {
+
   if (await authenticateUser(req)) {
     res.render(path.join("signup", "index"), {
       isSignedIn: true,
       errorMessage: "",
     });
   } else {
-    res.render(path.join("signup", "index"), {
-      isSignedIn: false,
-      errorMessage: "",
-    });
+    res.redirect("/dashboard")
   }
 });
 
@@ -176,6 +170,10 @@ app.get("/post-reply", async (req, res) => {
       errorMessage: "",
     });
   }
+});
+
+app.get("/signin", async (req, res) => {
+  res.status(301).redirect("/signup")
 });
 
 // EXPRESS API REQUESTS -------------------------------------------------------------------
@@ -489,8 +487,12 @@ async function getReplies(id) {
 async function getQuestion(id) {
   if (digits.test(id)) {
     const res = await client.query("SELECT * FROM apphysics1 WHERE id = $1;", [
-      id,
+      id
     ]);
+    if (!res.rows[0].body) {
+      console.log(`Question ${id} not found.`);
+      return {};
+    }
     return res.rows[0];
   } else {
     console.log("ID INVALID");
