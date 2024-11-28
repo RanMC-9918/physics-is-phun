@@ -2,13 +2,9 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  --primary: blanchedalmond;
-  --secondary: goldenrod;
-  --tertiary: darkgoldenrod;
 }
 
 a {
-  color: blanchedalmond; 
   text-decoration: none;
   font-weight: 500;
 }
@@ -77,6 +73,7 @@ body {
 
 .navbar a:not(:has(img)):hover {
   scale: 1.1;
+  cursor: pointer;
 }
 
 .navbar #logo-icon{
@@ -102,7 +99,7 @@ svg {
 
   .navbar ul{
     position: absolute;
-    top: -300px;
+    top: -400px;
     right: 10px;
     transition: top 0.5s 0.1s;
     gap: 15px;

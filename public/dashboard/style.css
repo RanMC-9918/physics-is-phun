@@ -1,5 +1,5 @@
 .logo-color {
-    color: #996f37;
+    color: var(--primary);
 }
 
 @keyframes fade-in {

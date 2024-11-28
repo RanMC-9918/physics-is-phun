@@ -7,7 +7,17 @@
     font-family: "Inter", sans-serif;
 }
 
-h1, h2, h3, h4, h5, h6{
-    display: block;
+
+h1, h2, h3, h4, h5, h6, p, button, a{
+    color: var(--textColor);
 }
 
+body{
+    color: var(--textColor);
+    background-color: var(--bgColor);
+}
+
+hr{
+    border: dotted 3px var(--secondary);
+    opacity: 0.3;
+}

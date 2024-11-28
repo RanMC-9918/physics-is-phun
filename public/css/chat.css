@@ -25,7 +25,7 @@ body{
   padding: 30px;
   border: 3px outset #ca676752;
   border-radius: 10px;
-  background-color: rgb(240, 214, 180);
+  background-color: var(--tertiary);
   text-align: left;
   min-height: 250px;
   max-width: calc(100% - 20px);
@@ -51,13 +51,12 @@ body{
   height: 3px;
   min-width: 15px;
   margin: 0 20px;
-  background-color: #c09979;
+  background-color: var(--secondary);
   border-radius: 10px;
 }
 
 .card .body {
   font-size: 1.2em;
-  color: #443;
   margin-bottom: 30px;
 }
 
@@ -69,12 +68,10 @@ body{
 
 .card .date {
   font-size: 0.8em;
-  color: #444;
 }
 
 .card .author {
   font-size: 1.1em;
-  color: #777;
 }
 
 .card .footer {
@@ -87,17 +84,17 @@ body{
 }
 
 .card .replies button {
-  background-color: #8f96d3;
+  background-color: var(--secondary);
   border-radius: 10px;
   padding: 10px;
-  border: none;
-  color: white;
+  border: solid 3px var(--secondary);
   font-weight: medium;
   transition: scale 0.2s;
 }
 
 .card .replies button:hover {
-  background-color: #8881be;
+  background-color: var(--tertiary);
+  box-shadow: inset 0 0 60px var(--secondary);
   cursor: pointer;
   scale: 1.1;
 }
@@ -109,19 +106,16 @@ body{
   width: 105px;
   height: 50px;
   border-radius: 10px;
-  background: linear-gradient(to bottom right, rgb(184, 162, 234) 20%, rgb(177, 177, 236) 50%, rgb(159, 141, 209) 80%);
-  color: white;
   font-weight: 500;
   font-size: 1.3em;
-  border: outset #9b95c9 3px;
+  border: outset var(--primary) 3px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .post:hover {
-  background: linear-gradient(to bottom right, rgb(184, 162, 234) 30%, rgb(177, 177, 236) 70%, rgb(159, 141, 209) 100%);
   cursor: pointer;
-  border: inset #9b95c9 3px;
+  border: inset var(--primary) 3px;
   scale: 1;
 }
 

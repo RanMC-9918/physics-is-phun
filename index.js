@@ -81,6 +81,7 @@ app.get("/chat", async (req, res) => {
 
 app.get("/account", async (req, res) => {
   if (await authenticateUser(req)) {
+    let id = parseCookies(req.headers.cookie).userid;
     let info = await getAccountInfo(id);
     res.render(path.join("account", "index"), { isSignedIn: true, username: info.username, email: info.email, password: info.pass });
   } else {
@@ -103,6 +104,7 @@ app.get("/donate", async (req, res) => {
 
 app.get("/dashboard", async (req, res) => {
   if (await authenticateUser(req)) {
+    let id = parseCookies(req.headers.cookie).userid
     res.render(path.join("dashboard", "index"), { isSignedIn: true, username: await getNameFromId(id) });
   } else {
     res.redirect("/");
@@ -285,9 +287,8 @@ app.post("/login-form", async (req, res) => {
     });
   } else {
     res.header("set-cookie", `userid=${id}`);
-    res.send(
-      `<body><script> sessionStorage.setItem("id", ${id}); window.location.href = window.location.origin;</script></body>`
-    );
+    console.log("User logged in with id " + id);
+    res.redirect("/");
   }
 });
 
@@ -568,7 +569,7 @@ async function refreshMessages() {
 }
 
 async function authenticateUser(req) {
-  let id = parseCookies(req.header.cookie).userid;
+  let id = parseCookies(req.headers.cookie).userid;
   if (id) {
     return true;
   }
