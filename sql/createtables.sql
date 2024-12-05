@@ -21,7 +21,15 @@ CREATE TABLE IF NOT EXISTS accounts (
     username VARCHAR(50),
     pass TEXT,
     email VARCHAR(100),
-    creation_date DATE
+    creation_date DATE,
+    reply_ids INTEGER
 );
 
 
+CREATE TABLE IF NOT EXISTS replies (
+    id SERIAL PRIMARY KEY,
+    body text,
+    posted_at date,
+    author integer,
+    title VARCHAR(50)
+);

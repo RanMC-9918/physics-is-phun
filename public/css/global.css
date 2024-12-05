@@ -8,7 +8,7 @@
 }
 
 
-h1, h2, h3, h4, h5, h6, p, button, a{
+*{
     color: var(--textColor);
 }
 
@@ -20,4 +20,22 @@ body{
 hr{
     border: dotted 3px var(--secondary);
     opacity: 0.3;
+}
+
+button {
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    border-radius: 10px;
+    background-color: var(--tertiary);
+    font-weight: 500;
+    font-size: 1.3em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+}
+
+button:hover {
+    background-color: var(--secondary);
 }

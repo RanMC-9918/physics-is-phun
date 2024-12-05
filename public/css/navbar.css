@@ -10,14 +10,13 @@ a {
 }
 
 body {
-  margin-top: 90px;
   background-color: var(--primary);
 }
 
 /*NAVBAR ----------------------------------------------*/
 
 .navbar {
-  position: fixed;
+  position: sticky;
   display: flex;
   top: 0;
   background-color: var(--secondary);
@@ -25,7 +24,6 @@ body {
   padding: 5px 20px;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
   z-index: 100;
 }
 

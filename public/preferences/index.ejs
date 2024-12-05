@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phun Physics</title>
+    <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+    <link rel="stylesheet" href="../css/navbar.css" />
+    <link rel="stylesheet" href="../css/global.css" />
+    <link rel="stylesheet" href="../preferences/style.css" />
+</head>
+<body>
+
+    <% if(isSignedIn) { %>
+        <%- include("../partials/navLoggedIn") %>
+    <% } else { %>
+        <%- include("../partials/nav") %>
+    <% } %>
+    
+    <div id="mainBody">
+        <ul class="leftnav">
+            <li>
+                <a href="#style">Style</a>
+            </li>
+            <li>
+                <a href="#account">Account</a>
+            </li>
+        </ul>
+
+        <main class="listOfPreferences">
+            <ul>
+                <h1 id="style">Style</h1>
+                <li>
+                    <label for="theme">Website Theme:</label>
+                    <select id="theme" onchange="changeWebsiteTheme(document.getElementById('theme').value);">
+                        <option value="darkBlue">Dark Blue</option>
+                        <option value="mintyGreen">Minty Green</option>
+                        <option value="grayscale">Grayscale</option>
+                    </select>
+                    </li>
+                </li>
+            </ul>
+            <% if(isSignedIn) { %>
+                <ul>
+                    <h1 id="account">Account</h1>
+                    <div class="info">
+                        <center><h1 id="21309">Profile Info: </h1></center>
+                            <h3 id="03429">Name: <h3 class="content"><%= username %></h3></h3>
+                            <h3 id="43092">Email address: <h3 class="content"><%= email %></h3></h3>
+                            <h3 id="43902">Password: <h3 class="content"><%= password %></h3></h3>
+                        <center>
+                            <button onclick="
+                                sessionStorage.setItem('id', 0);
+                                document.cookie = 'userid=0;expires=Thu, 01 Jan 1990 00:00:00 UTC;path=/;'; //delete userid cookie
+                                console.log(document.cookie);
+                                window.location.href = window.location.origin
+                            ">Logout</button>
+                        </center>
+                    </div>
+                </ul>
+            <% } %>
+        </main>
+    </div>
+</body>
+</html>
+

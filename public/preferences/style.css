@@ -1,0 +1,115 @@
+html{
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+li{
+    list-style-type: none;
+}
+
+h1{
+    scroll-margin-top: 80px;
+}
+
+.leftnav{
+    background-color: var(--tertiary);
+    padding: 20px;
+    min-height: 100vh;
+    width: 200px;
+    position: fixed;
+    font-size: larger;
+    line-height: 2em;
+}
+
+.listOfPreferences{
+    margin-left: 200px;
+    padding: 20px;
+}
+
+@media screen and (max-width: 700px) {
+    .leftnav{
+        width: 100%;
+        position: static;
+    }
+    .listOfPreferences{
+        margin-left: 0;
+    }
+
+    .info *{
+        padding: 0;
+        margin: 0;
+    }
+}
+
+
+
+.listOfPreferences h1{
+    font-size: 3rem;
+    margin-bottom: 20px;
+    margin-top: 30px;
+}
+
+.listOfPreferences ul li{
+    margin: 5px 0;
+    padding: 15px;
+    background-color: var(--tertiary);
+    display: flex;
+    font-size: 1.5rem;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.listOfPreferences select, .listOfPreferences option{
+    background-color: var(--secondary);
+    border: none;
+    border-radius: 0;
+    padding: 10px;
+}
+
+option[value="darkBlue"]{
+    background-color: #2b54c6;
+}
+
+option[value="mintyGreen"]{
+    background-color: #60f43e;
+}
+
+option[value="grayscale"]{
+    background-color: #493a3a;
+}
+
+
+.info {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: left;
+}
+
+.info * {
+    font-size: 1.5em;
+    margin: 10px;
+    overflow-wrap: break-word;
+}
+
+.info h1 {
+    font-size: 2em;
+    background-color: var(--secondary);
+}
+
+
+.content {
+    margin-left: 20px;
+    margin-bottom: 30px;
+    background-color: var(--tertiary);
+    padding: 10px;
+}
+
+.info button {
+    padding: 10px 20px;
+    background-color: var(--tertiary);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: medium;
+}

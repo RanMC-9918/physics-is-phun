@@ -4,36 +4,3 @@
     align-items: center;
 }
 
-.info {
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 20px;
-    text-align: left;
-}
-
-.info * {
-    font-size: 1.5em;
-    margin: 10px;
-}
-
-.info h1 {
-    font-size: 2em;
-    background-color: var(--secondary);
-}
-
-
-.content {
-    margin-left: 20px;
-    margin-bottom: 30px;
-    background-color: var(--tertiary);
-    padding: 10px;
-}
-
-.info button {
-    padding: 10px 20px;
-    background-color: var(--tertiary);
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: medium;
-}

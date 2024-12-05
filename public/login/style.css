@@ -20,22 +20,6 @@ input[type="text"],
 input[type="password"] {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--textColor);
     border-radius: 5px;
-}
-
-form button {
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    border-radius: 10px;
-    background-color: #8f96d3;
-    color: white;
-    font-weight: 500;
-    font-size: 1.3em;
-    border: solid #8881be 2px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 5px;
 }

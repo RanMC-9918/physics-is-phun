@@ -16,7 +16,7 @@ const debugMode = false;
 
 const client = new Pool({
   connectionString:
-    process.env.DBURL,
+    process.env.DBURL
 });
 
 client.connect((err) => {
@@ -49,8 +49,6 @@ app.set("views", path.join(__dirname, "public"));
 
 const port = process.env.PORT || 8080;
 
-// EXPRESS JS MIDDLEWARE ------------------------------------------------------------------
-
 app.use((req, res, next) => {
   if (debugMode) {
     console.log(`${req.method} request to ${req.url}`); 
@@ -60,6 +58,30 @@ app.use((req, res, next) => {
 });
 
 app.use(express.static(path.join(__dirname, "public")));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //EXPRES JS GET REQUESTS ------------------------------------------------------------------------
 
@@ -81,16 +103,7 @@ app.get("/chat", async (req, res) => {
 
 app.get("/account", async (req, res) => {
   if (await authenticateUser(req)) {
-    let id = parseCookies(req.headers.cookie).userid;
-    let info = await getAccountInfo(id);
-    res.render(path.join("account", "index"), { isSignedIn: true, username: info.username, email: info.email, password: info.pass });
-  } else {
-    res.render(path.join("account", "index"), {
-      isSignedIn: false,
-      username: "You dont exist?",
-      email: "You dont exist?",
-      password: "You dont exist?",
-    });
+    res.render(path.join("account", "index"), { isSignedIn: true});
   }
 });
 
@@ -151,12 +164,12 @@ app.get("/login", async (req, res) => {
 app.get("/signup", async (req, res) => {
 
   if (await authenticateUser(req)) {
+    res.redirect("/dashboard");
+  } else {
     res.render(path.join("signup", "index"), {
-      isSignedIn: true,
+      isSignedIn: false,
       errorMessage: "",
     });
-  } else {
-    res.redirect("/dashboard")
   }
 });
 
@@ -174,9 +187,63 @@ app.get("/post-reply", async (req, res) => {
   }
 });
 
+app.get("/preferences", async (req, res) => {
+  if (await authenticateUser(req)) {
+    let id = parseCookies(req.headers.cookie).userid;
+    let info = await getAccountInfo(id);
+    if(info){
+      res.render(path.join("preferences", "index"), {
+        isSignedIn: true,
+        username: info.username,
+        email: info.email,
+        password: info.pass,
+      });
+    }
+    else{
+      res.render(path.join("preferences", "index"), {
+        isSignedIn: true,
+        username: "You don't exist?",
+        email: "Please contact support.",
+        password: "Log Out and Login again",
+      });
+    }
+    
+  } else {
+    res.render(path.join("preferences", "index"), {
+      isSignedIn: false
+    });
+  }
+});
+
 app.get("/signin", async (req, res) => {
   res.status(301).redirect("/signup")
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // EXPRESS API REQUESTS -------------------------------------------------------------------
 // these requests are depreciated, in favor of the server-side rendering (from ejs)
@@ -264,6 +331,27 @@ app.get("/replies/load", async (req, res) => {
   res.send(replies);
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //EXPRESS POST REQ -------------------------------------------------------------------
 
 app.post("/login-form", async (req, res) => {
@@ -303,7 +391,19 @@ app.post("/signin-form", (req, res) => {
 
   if (password.length <= 8 || !validateEmail(email)) {
     //send to error page
-    res.sendFile(path.join(__dirname, "public", "signin", "index_error.html"));
+    if(password.length <= 8){
+      res.render(path.join("signup", "index"), {
+        isSignedIn: false,
+        errorMessage: "Password needs to be 8 - 50 characters",
+      });
+    }
+    else{
+      res.render(path.join("signup", "index"), {
+        isSignedIn: false,
+        errorMessage: "Email should be valid",
+      });
+    }
+    
   } else {
     let id = generate10DigitRandomNumber();
     while (checkDuplicateId(id)) {
@@ -325,6 +425,7 @@ app.post("/signin-form", (req, res) => {
         }
       }
     );
+    res.header("set-cookie", `userid=${id}`);
 
     res.redirect("/");
   }
@@ -427,6 +528,37 @@ app.use(async (req, res) => {
     res.render(path.join("404", "index"), { isSignedIn: false });
   }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //SERVER PROCCESING FUNCTIONS
 
