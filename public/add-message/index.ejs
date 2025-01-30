@@ -10,10 +10,6 @@
     <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-    <script>
-        //console.log(sessionStorage.getItem("id"));
-        if (sessionStorage.getItem("id") == null || sessionStorage.getItem("id") == undefined || sessionStorage.getItem("id") == 0){window.location.href = window.location.origin + "/chat"};
-    </script>
 
     <% if(isSignedIn) { %>
         <%- include("../partials/navLoggedIn") %>
@@ -23,6 +19,7 @@
 
     <div id="mainBody">
         <form id="message-form" action="/add-message-form" method="POST">
+            <label id="sendingAs">Sending as <span class="underline"><%= username %></span></label>
             <label for="title">Title:</label>
             <textarea cols="50" type="text" id="title" name="title" required></textarea>
             <br/>

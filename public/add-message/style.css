@@ -41,3 +41,13 @@ button {
     max-width: 200px;
     margin: auto;
 }
+
+.underline {
+    text-decoration: underline;
+}
+
+#sendingAs{
+    margin: 15px auto;
+    font-size: 1.3em;
+    font-weight: 500;
+}

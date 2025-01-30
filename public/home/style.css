@@ -51,6 +51,10 @@ button{
     font-weight: 600;
 }
 
+.center{
+    margin: auto;
+}
+
 .callToAction{
     background-color: var(--tertiary);
     margin-top: 70px;

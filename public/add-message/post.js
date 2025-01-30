@@ -1,16 +1,12 @@
 
 let form = document.getElementById('message-form');
 
-sessionStorage.getItem("id");
-
 form.addEventListener('submit', event => {
     event.preventDefault();
 
     const title = document.getElementById('title').value;
     const message = document.getElementById('question').value;
-    const id = sessionStorage.getItem("id");
 
-    console.log(title, message, id);
 
     if(title && message){
         fetch(window.location.origin + "/add-message-form", {
@@ -18,15 +14,14 @@ form.addEventListener('submit', event => {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({title: title, message: message, id: id})
+            body: JSON.stringify({title, message})
         }).then(response => {
             redirectToChat();
             console.log(response);
         });
-        redirectToChat();
     }
 })
 
 function redirectToChat() {
-    window.location.href = window.location.origin + "/loggedIn-chat";
+    window.location.href = window.location.origin + "/chat";
 }

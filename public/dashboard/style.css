@@ -23,3 +23,7 @@ h1{
 #name{
     animation: fade-in 1s forwards;
 }
+
+.page-header{
+    margin-top: 30px;
+}

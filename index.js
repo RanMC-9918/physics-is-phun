@@ -71,18 +71,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 //EXPRES JS GET REQUESTS ------------------------------------------------------------------------
 
 app.get("/", async (req, res) => {
@@ -218,6 +206,15 @@ app.get("/preferences", async (req, res) => {
 app.get("/signin", async (req, res) => {
   res.status(301).redirect("/signup")
 });
+
+app.get("/add-message", async (req, res) => {
+  if (await authenticateUser(req)) {
+    let username = await getNameFromId(parseCookies(req.headers.cookie).userid);
+    res.render("add-message", {isSignedIn: true, errorMessage: '', username});
+  } else {
+    res.redirect("/")
+  }
+})
 
 
 
@@ -431,27 +428,29 @@ app.post("/signin-form", (req, res) => {
   }
 });
 
-app.post("/add-message-form", (req, res) => {
+app.post("/add-message-form", async (req, res) => {
   //console.log(req.body);
   const title = req.body.title;
   const question = req.body.message;
-  const author = req.body.id;
+  const author = parseCookies(req.headers.cookie).userid;
+
+  const authorName = await getNameFromId(author);
 
   //console.log(`Title: ${title}, Question: ${question}`)
 
   const currentDate = new Date();
   const formattedDate = currentDate.toISOString().split("T")[0];
   let id = generate10DigitRandomNumber();
-  while (checkDuplicateId1(id)) {
+  while (checkDuplicateId(id)) {
     id = generate10DigitRandomNumber();
   }
   client.query(
     `
-    INSERT INTO apphysics1 (resolved, title, body, posted_at, author) 
+    INSERT INTO apphysics1 (resolved, title, body, posted_at, author, author_name) 
     VALUES ($1, $2, $3, $4, $5, $6)
   `,
-    [false, title, question, formattedDate, author],
-    (err, res) => {
+    [false, title, question, formattedDate, author, authorName],
+    (err) => {
       if (err) {
         console.error(
           "Error inserting new message into PostgreSQL database",
@@ -459,16 +458,13 @@ app.post("/add-message-form", (req, res) => {
         );
       } else {
         console.log("New message posted with id: " + `${id}`);
+        res.send("OK!");
+        refreshMessages();
       }
     }
   );
 
-  client.query("SELECT * FROM apphysics1", (err, result) => {
-    if (err) {
-      console.error("Error fetching messages from PostgreSQL database", err);
-    } else {
-    }
-  });
+  refreshMessages();
 
   // res.redirect('/loggedIn-chat');
 
@@ -679,18 +675,20 @@ async function refreshMessages() {
         let cardData = req.rows;
         for (let i = 0; i < cardData.length; i++) {
           // console.log(cardData[i].author);
-          if (cardData[i].author != null) {
-            await getNameFromId(cardData[i].author).then((name) => {
-              cardData[i].author = name;
-            });
+          if (cardData[i].author_name != null) {
+            cardData[i].authorName = cardData[i].author_name
           } else {
-            cardData[i].author = "Anonymous";
+            cardData[i].authorName = "Anonymous";
           }
           //console.log(cardData[i].reply_ids);
           if (cardData[i].reply_ids) {
             cardData[i].reply = cardData[i].reply_ids.length;
           } else {
             cardData[i].reply = 0;
+          }
+
+          if(cardData[i].author){
+            cardData[i].author = 12345678;
           }
         }
         console.log("The main chat messages have been refreshed.");
@@ -710,6 +708,7 @@ async function authenticateUser(req) {
 
 function parseCookies(cookies) {
   let ans = {};
+  //console.log(cookies);
   if (cookies) {
     cookies.split(";").forEach((pair) => {
       let key = pair.split("=")[0];

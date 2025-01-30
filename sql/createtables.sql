@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS apphysics1 (
     posted_at date,
     reply reply,
     author integer,
+    author_name VARCHAR(50),
     likes integer
 );
 

@@ -28,7 +28,7 @@ fetch(window.location.origin + "/chat/load").then((res) => {
         </div>
         <br />
         <div class="footer">
-          <p class="author">-${e.author}</p>
+          <p class="author">-${e.authorName}</p>
           <a class="replies" href="${
             window.location.origin + "/questions/?id=" + e.id
           }

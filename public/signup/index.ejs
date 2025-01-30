@@ -19,14 +19,14 @@
 
     <div id="mainBody">
         <form action="/signin-form" method="POST">
-            <label for="email">Gmail:</label>
-            <input type="text" id="email" name="email" required>
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" placeholder="email@example.com" required>
             <br>
             <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
+            <input type="text" id="username" name="username" placeholder="username" required>
             <br/>
             <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+            <input type="password" id="password" name="password" placeholder="password" required>
             <br/>
             <button type="submit" >Sign In</button>
             <p style="color: red"> <%= errorMessage %></p>

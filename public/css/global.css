@@ -39,3 +39,8 @@ button {
 button:hover {
     background-color: var(--secondary);
 }
+
+input{
+    color: var(--textColor);
+    background-color: var(--tertiary);
+}

@@ -40,6 +40,12 @@
                     </li>
                 </li>
             </ul>
+
+            <script type="text/javascript">
+                let theme = localStorage.getItem('theme');
+                document.getElementById('theme').value = theme;
+            </script>
+
             <% if(isSignedIn) { %>
                 <ul>
                     <h1 id="account">Account</h1>
