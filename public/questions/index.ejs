@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../css/navbar.css" />
     <link rel="stylesheet" href="../css/global.css" />
     <link rel="stylesheet" href="../css/chat.css" />
+    <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
     
@@ -18,7 +19,7 @@
     <% } %>
 
     <div id="mainBody">
-        <h1>Question</h1>
+        <h1 class="section-header" >Question</h1>
         <div id="question">
             <div class="card">
                 <div class="header">
@@ -42,7 +43,7 @@
                 </div>
             </div>
         </div>
-        <h2>Replies</h2>
+        <h2 class="section-header">Replies</h2>
         <div id="replyContainer">
             <% if(replies.length == 0) { %>
                 <p>No replies yet. Be the first :)</p>

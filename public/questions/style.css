@@ -1,0 +1,13 @@
+
+#replyButton{
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    border: 4px var(--secondary) solid;
+    padding: 5px 10px;
+}
+
+.section-header{
+    margin-top: 20px;
+    margin-bottom: 10px;
+}

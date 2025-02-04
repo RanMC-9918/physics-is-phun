@@ -478,7 +478,7 @@ app.post("/add-message-form", async (req, res) => {
 app.post("/post-reply-form", async (req, res) => {
   let messageId = req.query.id.match(digits).join(); //match only numbers and join array to string
 
-  let author = parseCookies(req.headers.cookie).userid
+  let author = parseCookies(req.headers.cookie).userid;
 
   let title = req.body.title;
 
@@ -492,7 +492,8 @@ app.post("/post-reply-form", async (req, res) => {
     "select id from replies order by id desc limit 1;"
   );
 
-  if (replyId != undefined || replyId != null) {
+
+  if (replyId.rows[0] != undefined || replyId.rows[0] != null) {
     replyId = replyId.rows[0].id + 1;
     //console.log("message: " + replyId);
   } else {

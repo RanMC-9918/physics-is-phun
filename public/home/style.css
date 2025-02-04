@@ -140,7 +140,6 @@ section h1{
 
 .cardshowcase .card{
     animation: pan-down 1s infinite; 
-    transform: rotateX(calc(calc(var(--scroll) - 0.5) * 100deg)); 
-    opacity: calc(min(calc(var(--scroll) - 0.5), -1 * calc(var(--scroll) - 0.5)) + 1);
+    translate: calc(calc(var(--scroll) - 0.5) * 30px); 
     box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.3);
 }

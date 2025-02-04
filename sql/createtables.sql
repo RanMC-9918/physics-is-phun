@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS apphysics1 (
     title VARCHAR(50),
     body text,
     posted_at date,
-    reply reply,
+    reply_ids integer[50],
     author integer,
     author_name VARCHAR(50),
     likes integer
@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS accounts (
 
 CREATE TABLE IF NOT EXISTS replies (
     id SERIAL PRIMARY KEY,
+    username VARCHAR(50),
     body text,
     posted_at date,
     author integer,
